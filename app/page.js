@@ -5,20 +5,28 @@ import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 import { Noto_Serif, Roboto_Mono } from "next/font/google";
 import { motion } from "framer-motion";
 import Image from "next/image";
-const noto = Noto_Serif({ subsets: ["latin"], weight: "600" });
+import { useRef } from "react";
+const noto = Noto_Serif({ subsets: ["latin"], weight: "variable" });
 const roboto = Roboto_Mono({ subsets: ["latin"], weight: "variable" });
+import { FaGithub, FaGraduationCap, FaTools, FaUser } from "react-icons/fa";
+import { FaLinkedinIn } from "react-icons/fa";
+import Link from "next/link";
+import Sidebar from "@/components/Sidebar";
 
 export default function Home() {
+  const parallaxRef = useRef();
+
   return (
     <div className="flex flex-col">
       <NavBar />
-      <Parallax pages={3}>
-        <ParallaxLayer speed={0.5}>
+      <Sidebar parallaxRef={parallaxRef} />
+      <Parallax pages={4} ref={parallaxRef}>
+        <ParallaxLayer offset={0}>
           <div>
             <Image fill={true} src={"/squares.png"} />
           </div>
         </ParallaxLayer>
-        <ParallaxLayer speed={1}>
+        <ParallaxLayer offset={0}>
           <motion.div
             initial={{ opacity: 0 }}
             transition={{ ease: "easeOut", duration: 1 }}
@@ -32,17 +40,43 @@ export default function Home() {
               I'm Aakif Mohamed
             </h1>
             <h2 className="text-2xl">I build websites</h2>
+            <div className="text-2xl text-black flex gap-4 mt-4">
+              <Link
+                target="_blank"
+                href="https://www.github.com/spaaacy"
+                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(110,84,148)] hover:shadow-[0_0_10px_3px_rgba(110,84,148,1)] transition"
+              >
+                <FaGithub />
+              </Link>
+              <Link
+                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(10,102,194)] hover:shadow-[0_0_10px_3px_rgba(10,102,194,0.8)] transition"
+                target="_blank"
+                href="https://www.linkedin.com/in/aakifmohamed"
+              >
+                <FaLinkedinIn />
+              </Link>
+            </div>
           </motion.div>
         </ParallaxLayer>
-        <ParallaxLayer offset={0.8} speed={1.1}>
-          <div className="fixed top-1/2 -translate-y-1/2 left-[25%]">
+        <ParallaxLayer offset={1} factor={0.8}>
+          <div className="fixed top-1/2 -translate-y-1/2 left-[25%] flex flex-col justify-center items-center">
             <div className="w-52 h-52 relative drop-shadow-xl">
-              <Image src={"/headshot.jpg"} fill={true} style={{ objectFit: "cover" }} className="rounded-full" />
+              <Image
+                src={"/headshot.jpg"}
+                width={208}
+                height={208}
+                style={{ objectFit: "cover" }}
+                className="w-52 h-52 rounded-full"
+              />
             </div>
           </div>
         </ParallaxLayer>
-        <ParallaxLayer offset={0.8} speed={1}>
-          <div className="bg-neutral-900 drop-shadow-xl text-neutral-50 max-w-[48rem] rounded-xl p-8 fixed top-1/2 -translate-y-1/2 left-[40%]">
+
+        <ParallaxLayer offset={1} factor={0.8}>
+          <section
+            id="about"
+            className="bg-gradient-to-tr from-slate-700 to-indigo-900 drop-shadow-xl text-neutral-50 max-w-[48rem] rounded-xl p-8 fixed top-1/2 -translate-y-1/2 left-[40%]"
+          >
             <div className="flex mt-2">
               <div className="flex flex-col gap-4">
                 <h2 className="text-4xl">About</h2>
@@ -65,9 +99,34 @@ export default function Home() {
                 </p>
               </div>
             </div>
+          </section>
+        </ParallaxLayer>
+        <ParallaxLayer offset={1.8} factor={0.6} className="flex flex-col justify-center items-center w-full">
+          <div className="w-full max-w-[1260px] flex items-center justify-center flex-col">
+            <h3 className={`${roboto.className} text-5xl font-bold text-center py-2 px-4 bg-black text-white w-full`}>
+              EDUCATION
+            </h3>
+            <p className={`${noto.className} mt-8 text-center`}>
+              <span className="text-xl font-bold">Master of Science in Computer Science</span>
+              <br />
+              Florida International University
+              <br />
+              Miami, FL
+              <br />
+              Spring 2025
+            </p>
+            <p className={`${noto.className} mt-8 text-center`}>
+              <span className="text-xl font-bold">Bachelor of Science in Computer Science</span>
+              <br />
+              Asia Pacific University of Technology & Innovation
+              <br />
+              Kuala Lumpur, Malaysia
+              <br />
+              Class of 2022
+            </p>
           </div>
         </ParallaxLayer>
-        <ParallaxLayer offset={1} speed={1} className="flex justify-center items-start">
+        <ParallaxLayer offset={2.4} factor={0.8} className="flex justify-center items-center">
           <div>
             <h3 className={`${roboto.className} text-5xl font-bold text-center py-2 px-4 bg-black text-white`}>
               SKILLS
@@ -87,7 +146,9 @@ export default function Home() {
                     <p
                       className={`${roboto.className} mt-4 font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
                     >
-                      {technologies[t]}
+                      {technologies_names[t]}
+                      {": "}
+                      {technologies_prof[t]}
                     </p>
                   </div>
                 );
@@ -108,7 +169,7 @@ export default function Home() {
                     <p
                       className={`${roboto.className} mt-4 font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
                     >
-                      {languages[t]}
+                      {languages_names[t]}
                     </p>
                   </div>
                 );
@@ -133,7 +194,7 @@ const technologies_images = [
   "react.png",
 ];
 
-const languages = {
+const languages_names = {
   "c++.png": "c++",
   "python.webp": "python",
   "js.png": "javascript",
@@ -143,7 +204,7 @@ const languages = {
   "solidity.svg": "solidity",
 };
 
-const technologies = {
+const technologies_names = {
   "ethereum.png": "ethereum",
   "flutter.png": "flutter",
   "mongodb.png": "mongodb",
@@ -151,4 +212,24 @@ const technologies = {
   "nodejs.png": "nodejs",
   "postgresql.png": "postgresql",
   "react.png": "react",
+};
+
+const technologies_prof = {
+  "ethereum.png": "3/5",
+  "flutter.png": "4/5",
+  "mongodb.png": "4/5",
+  "nextjs.png": "5/5",
+  "nodejs.png": "5/5",
+  "postgresql.png": "5/5",
+  "react.png": "5/5",
+};
+
+const languages_prof = {
+  "c++.png": "3/5",
+  "python.webp": "4/5",
+  "js.png": "5/5",
+  "kotlin.png": "4/5",
+  "dart.png": "4/5",
+  "java.png": "4/5",
+  "solidity.svg": "4/5",
 };
