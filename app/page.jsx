@@ -22,7 +22,7 @@ export default function Home() {
     <div className="flex flex-col">
       <NavBar />
       <Sidebar parallaxRef={parallaxRef} />
-      <Parallax pages={4} ref={parallaxRef}>
+      <Parallax pages={3.6} ref={parallaxRef}>
         <ParallaxLayer offset={0}>
           <div>
             <Image fill={true} src={"/squares.png"} />
@@ -165,7 +165,7 @@ export default function Home() {
             </ul>
           </div>
         </ParallaxLayer>
-        <ParallaxLayer offset={3.2} factor={0.5} className="flex flex-col justify-center items-center w-full">
+        <ParallaxLayer offset={3.2} factor={0.3} className="flex flex-col justify-center items-center w-full">
           <div className="w-full max-w-[1260px] flex items-center justify-center flex-col">
             <h3 className={`${roboto.className} text-5xl font-bold text-center py-2 px-4 `}>Contact Me</h3>
             <div className="text-2xl text-black flex gap-4 mt-4">
@@ -199,6 +199,13 @@ export default function Home() {
               </Link>
             </div>
           </div>
+        </ParallaxLayer>
+        <ParallaxLayer offset={3.5} factor={0.1} className="flex flex-col justify-end items-center w-full">
+          <footer className="py-4 text-sm flex items-baseline">
+            {"Built using "}
+            <Image className="inline ml-2" src={"/technologies/nextjs.png"} width={60} height={60} />, deployed on{" "}
+            <Image className="inline ml-2 mr-1" src={"/vercel.png"} width={60} height={60} />.
+          </footer>
         </ParallaxLayer>
       </Parallax>
     </div>
