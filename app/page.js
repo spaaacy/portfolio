@@ -12,6 +12,8 @@ import { FaGithub, FaGraduationCap, FaTools, FaUser } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
 import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
+import { MdOutlineEmail } from "react-icons/md";
+import { FaPhone } from "react-icons/fa6";
 
 export default function Home() {
   const parallaxRef = useRef();
@@ -40,22 +42,6 @@ export default function Home() {
               I'm Aakif Mohamed
             </h1>
             <h2 className="text-2xl">I build websites</h2>
-            <div className="text-2xl text-black flex gap-4 mt-4">
-              <Link
-                target="_blank"
-                href="https://www.github.com/spaaacy"
-                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(110,84,148)] hover:shadow-[0_0_10px_3px_rgba(110,84,148,1)] transition"
-              >
-                <FaGithub />
-              </Link>
-              <Link
-                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(10,102,194)] hover:shadow-[0_0_10px_3px_rgba(10,102,194,0.8)] transition"
-                target="_blank"
-                href="https://www.linkedin.com/in/aakifmohamed"
-              >
-                <FaLinkedinIn />
-              </Link>
-            </div>
           </motion.div>
         </ParallaxLayer>
         <ParallaxLayer offset={1} factor={0.8}>
@@ -156,25 +142,62 @@ export default function Home() {
             </ul>
             <h2 className={`${roboto.className} text-2xl font-semibold text-center mt-8`}>LANGUAGES</h2>
             <ul className="flex justify-center items-center gap-24 mt-8">
-              {languages_images.map((t, i) => {
+              {languages_images.map((l, i) => {
                 return (
                   <div className="relative flex flex-col justify-center items-center hover:scale-125 transition group">
                     <Image
                       className="h-[100px] w-[100px] object-contain"
                       key={i}
-                      src={`/${t}`}
+                      src={`/${l}`}
                       width={100}
                       height={100}
                     />
                     <p
                       className={`${roboto.className} mt-4 font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
                     >
-                      {languages_names[t]}
+                      {languages_names[l]}
+                      {": "}
+                      {languages_prof[l]}
                     </p>
                   </div>
                 );
               })}
             </ul>
+          </div>
+        </ParallaxLayer>
+        <ParallaxLayer offset={3.2} factor={0.5} className="flex flex-col justify-center items-center w-full">
+          <div className="w-full max-w-[1260px] flex items-center justify-center flex-col">
+            <h3 className={`${roboto.className} text-5xl font-bold text-center py-2 px-4 `}>Contact Me</h3>
+            <div className="text-2xl text-black flex gap-4 mt-4">
+              <Link
+                target="_blank"
+                href="mailto:aakifahamath@gmail.com"
+                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(199,22,16)] hover:shadow-[0_0_10px_3px_rgba(199,22,16,1)] transition"
+              >
+                <MdOutlineEmail />
+              </Link>
+              <Link
+                target="_blank"
+                href="https://www.github.com/spaaacy"
+                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(110,84,148)] hover:shadow-[0_0_10px_3px_rgba(110,84,148,1)] transition"
+              >
+                <FaGithub />
+              </Link>
+              <Link
+                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(10,102,194)] hover:shadow-[0_0_10px_3px_rgba(10,102,194,0.8)] transition"
+                target="_blank"
+                href="https://www.linkedin.com/in/aakifmohamed"
+              >
+                <FaLinkedinIn />
+              </Link>
+              <Link
+                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(8,133,27)] hover:shadow-[0_0_10px_3px_rgba(8,133,27,0.8)] transition"
+                target="_blank"
+                href="tel:7868678766"
+              >
+                <FaPhone />
+              </Link>
+            </div>
           </div>
         </ParallaxLayer>
       </Parallax>
