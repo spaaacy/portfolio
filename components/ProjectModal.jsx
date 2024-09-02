@@ -15,7 +15,7 @@ const ProjectModal = ({ project, setShowModal }) => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex flex-col px-6 py-8 rounded-xl lg:w-1/2 h-[48rem] bg-neutral-100 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
+        className="flex flex-col p-6 rounded-xl lg:w-1/2 h-[42rem] max-h-[48rem] bg-neutral-100 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
       >
         <div className="flex justify-start items-center text-xl gap-4">
           {project.logo && <Image src={project.logo} width={40} height={40} className="w-10 h-10 rounded-full" />}
@@ -40,29 +40,41 @@ const ProjectModal = ({ project, setShowModal }) => {
             </Link>
           )}
         </div>
-        <p className="text-sm mt-2">{project.about}</p>
-        <div className="flex items-center justify-between w-full relative h-full">
+        {project.about && <p className="text-sm mt-2">{project.about}</p>}
+        <div className="flex justify-between items-center flex-1">
           <button
             type="button"
             onClick={() => setCurrentImage((currentImage + 1) % project.images.length)}
-            className="text-2xl text-white z-50 mx-2"
+            className="text-2xl text-black z-50 mx-2"
           >
             <FaArrowCircleLeft />
           </button>
+          <div className="flex items-center justify-between w-full relative h-full">
+            <Image
+              src={project.images[currentImage]}
+              fill={true}
+              className="w-96 h-96 flex-1 relative"
+              objectFit="contain"
+            />
+          </div>
           <button
             onClick={() => setCurrentImage((currentImage + 1) % project.images.length)}
             type="button"
-            className="text-2xl text-white z-50 mx-2"
+            className="text-2xl text-black z-50 mx-2"
           >
             <FaArrowCircleRight />
           </button>
-          <Image
-            src={project.images[currentImage]}
-            fill={true}
-            className="w-96 h-96 flex-1 relative"
-            objectFit="contain"
-          />
         </div>
+
+        <ul className="mt-auto flex gap-2 justify-start items-center">
+          {project.stack.map((s, i) => {
+            return (
+              <p key={i} className="py-1 px-2 rounded-full bg-neutral-800 text-white text-xs">
+                {s}
+              </p>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );

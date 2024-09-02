@@ -12,6 +12,13 @@ const NavBar = () => {
         <Link href="/projects" className="hover:text-white text-neutral-200 transition">
           Projects
         </Link>
+        <Link
+          target="_blank"
+          href="https://drive.google.com/file/d/14t_tSE5WZP0FP38BcUQzqklO2S_Q-97X/view?usp=sharing"
+          className="hover:text-white text-neutral-200 transition"
+        >
+          Resume
+        </Link>
       </div>
     </nav>
   );
