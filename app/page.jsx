@@ -64,7 +64,7 @@ export default function Home() {
             className="bg-gradient-to-tr from-slate-700 to-indigo-900 drop-shadow-xl text-neutral-50 max-w-[48rem] rounded-xl p-8 fixed top-1/2 -translate-y-1/2 left-[40%]"
           >
             <div className="flex mt-2">
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4  max-h-[32rem] overflow-y-auto">
                 <h2 className="text-4xl">About</h2>
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nisi diam, interdum ut massa vel,
@@ -125,7 +125,7 @@ export default function Home() {
                     <Image
                       className="h-[100px] w-[100px] object-contain"
                       key={i}
-                      src={`/${t}`}
+                      src={`/technologies/${t}`}
                       width={100}
                       height={100}
                     />
@@ -148,7 +148,7 @@ export default function Home() {
                     <Image
                       className="h-[100px] w-[100px] object-contain"
                       key={i}
-                      src={`/${l}`}
+                      src={`/languages/${l}`}
                       width={100}
                       height={100}
                     />
