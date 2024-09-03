@@ -19,7 +19,7 @@ export default function Home() {
   const parallaxRef = useRef();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <NavBar />
       <Sidebar parallaxRef={parallaxRef} />
       <Parallax pages={3.6} ref={parallaxRef}>

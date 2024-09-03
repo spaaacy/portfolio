@@ -4,8 +4,8 @@ import Link from "next/link";
 
 const NavBar = () => {
   return (
-    <nav className={`absolute top-4 left-1/2 -translate-x-1/2 flex z-20`}>
-      <div className="flex gap-4 items-center justify-center py-2 rounded-full bg-neutral-900 mx-auto px-8 backdrop-blur-sm bg-opacity-60">
+    <nav className={`sticky top-4 flex z-20`}>
+      <div className="flex gap-4 items-center justify-center py-2 rounded-full bg-neutral-900 mx-auto px-8 backdrop-blur-sm bg-opacity-80">
         <Link href="/" className="hover:text-white text-neutral-300 transition backdrop-filter">
           Home
         </Link>
@@ -18,6 +18,20 @@ const NavBar = () => {
           className="hover:text-white text-neutral-200 transition"
         >
           Resume
+        </Link>
+        <Link
+          target="_blank"
+          href="https://www.linkedin.com/in/aakifmohamed"
+          className="hover:text-white text-neutral-200 transition"
+        >
+          LinkedIn
+        </Link>
+        <Link
+          target="_blank"
+          href="https://www.github.com/spaaacy"
+          className="hover:text-white text-neutral-200 transition"
+        >
+          GitHub
         </Link>
       </div>
     </nav>
