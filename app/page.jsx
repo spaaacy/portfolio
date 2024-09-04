@@ -14,6 +14,7 @@ import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   const parallaxRef = useRef();
@@ -22,9 +23,12 @@ export default function Home() {
       <Sidebar parallaxRef={parallaxRef} />
       <NavBar />
 
-      <Parallax pages={window.innerWidth < 640 ? 3.6 : 2.8} ref={parallaxRef}>
+      <Parallax pages={window.innerWidth < 640 ? 3.8 : 2.8} ref={parallaxRef}>
         <ParallaxLayer offset={0} factor={1} speed={0.7}>
-          <div>{/* <Image fill={true} src={"/squares.png"} /> */}</div>
+          <div>
+            <Image fill={true} src={"/stars.jpg"} className="-z-50" />
+            <div className="bg-black bg-opacity-50  h-screen w-screen" />
+          </div>
         </ParallaxLayer>
         <ParallaxLayer offset={0} factor={1} speed={0.2}>
           <motion.div
@@ -32,26 +36,26 @@ export default function Home() {
             transition={{ ease: "easeOut", duration: 1 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className={`drop-shadow-xl ${noto.className} fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col items-center`}
+            className={`text-white drop-shadow-xl ${noto.className} fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col items-center`}
           >
             <h1 className="text-6xl font-bold text-center">
               Hello,
               <br />
               I'm Aakif Mohamed
             </h1>
-            <h2 className="text-xl text-neutral-700 font-light mt-4 text-center">
-              Web Developer and Software Engineer
+            <h2 className="text-xl font-light mt-4 text-center bg-neutral-900 backdrop-blur-sm px-4 py-2 rounded-full bg-opacity-60 ">
+              Full-Stack Developer and Software Engineer
             </h2>
-            <div className="text-2xl text-black flex gap-4 mt-4">
+            <div className="text-2xl flex gap-4 mt-4 bg-neutral-900 backdrop-blur-sm px-2 py-1 rounded-full bg-opacity-60">
               <Link
                 target="_blank"
                 href="https://www.github.com/spaaacy"
-                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(110,84,148)] hover:shadow-[0_0_10px_3px_rgba(110,84,148,1)] transition"
+                className="p-2 rounded-full hover:shadow-[0_0_10px_3px_rgba(255,255,255,0.3)] transition"
               >
                 <FaGithub />
               </Link>
               <Link
-                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(10,102,194)] hover:shadow-[0_0_10px_3px_rgba(10,102,194,0.8)] transition"
+                className="p-2 rounded-full hover:shadow-[0_0_10px_3px_rgba(255,255,255,0.3)] transition"
                 target="_blank"
                 href="https://www.linkedin.com/in/aakifmohamed"
               >
@@ -61,8 +65,15 @@ export default function Home() {
           </motion.div>
         </ParallaxLayer>
 
-        <ParallaxLayer offset={1} factor={0.5} speed={0.1}>
-          <div className="fixed top-1/2 sm:mr-10 md:mr-20 -translate-y-1/2 right-1/2 flex flex-col justify-center items-center">
+        <ParallaxLayer offset={1} factor={window.innerWidth < 640 ? 1 : 0.5} speed={0.2}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            transition={{ ease: "easeOut", duration: 1 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="fixed top-1/2 sm:mr-10 md:mr-20 -translate-y-1/2 right-1/2 flex flex-col justify-center
+            items-center"
+          >
             <div className="max-sm:w-32 max-sm:h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 relative drop-shadow-xl">
               <Image
                 src={"/headshot.jpg"}
@@ -72,10 +83,16 @@ export default function Home() {
                 className="max-sm:w-32 max-sm:h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-full"
               />
             </div>
-          </div>
+          </motion.div>
         </ParallaxLayer>
-        <ParallaxLayer offset={1} factor={0.5}>
-          <div className="flex flex-col fixed left-[50%] top-1/2 -translate-y-1/2 justify-center items-start gap-4 px-8">
+        <ParallaxLayer offset={1} factor={window.innerWidth < 640 ? 1 : 0.5} speed={0.1}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            transition={{ ease: "easeOut", duration: 1 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="flex flex-col fixed left-[50%] top-1/2 -translate-y-1/2 justify-center items-start gap-4 px-8"
+          >
             <h3 className={`${roboto.className} text-2xl font-bold text-center py-2 px-4 text-white bg-black`}>
               Education
             </h3>
@@ -101,15 +118,22 @@ export default function Home() {
                 <span className="italic">Bachelor of Science in Computer Science</span>
               </div>
             </div>
-          </div>
+          </motion.div>
         </ParallaxLayer>
 
         <ParallaxLayer
-          offset={1.8}
+          offset={window.innerWidth < 640 ? 2 : 1.8}
           factor={window.innerWidth < 640 ? 1.4 : 0.6}
+          speed={0.1}
           className=" flex justify-center items-center "
         >
-          <div className="flex flex-col justify-center items-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            transition={{ ease: "easeOut", duration: 1 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="flex flex-col justify-center items-center"
+          >
             <h3 className={`${roboto.className} text-2xl font-bold text-center py-2 px-4 text-white bg-black`}>
               MY TOOLS OF TRADE
             </h3>
@@ -165,16 +189,22 @@ export default function Home() {
                 );
               })}
             </ul>
-          </div>
+          </motion.div>
         </ParallaxLayer>
 
         <ParallaxLayer
-          offset={window.innerWidth < 640 ? 3.2 : 2.4}
+          offset={window.innerWidth < 640 ? 3.4 : 2.4}
           factor={0.3}
           speed={0.2}
           className="flex flex-col justify-center items-center w-full"
         >
-          <div className="w-full max-w-[1260px] flex items-center justify-center flex-col">
+          <motion.div
+            initial={{ opacity: 0 }}
+            transition={{ ease: "easeOut", duration: 1 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="w-full max-w-[1260px] flex items-center justify-center flex-col"
+          >
             <h3 className={`${roboto.className} max-md:text-3xl md:text-5xl font-bold text-center py-2 px-4 `}>
               Contact Me
             </h3>
@@ -195,19 +225,15 @@ export default function Home() {
                 <FaPhone />
               </Link>
             </div>
-          </div>
+          </motion.div>
         </ParallaxLayer>
 
         <ParallaxLayer
-          offset={window.innerWidth < 640 ? 3.5 : 2.7}
+          offset={window.innerWidth < 640 ? 3.7 : 2.7}
           factor={0.1}
           className="flex flex-col justify-end items-center w-full"
         >
-          <footer className="py-4 text-sm flex items-baseline">
-            {"Built using "}
-            <Image className="inline ml-2" src={"/technologies/nextjs.png"} width={60} height={60} />, deployed on{" "}
-            <Image className="inline ml-2 mr-1" src={"/vercel.png"} width={60} height={60} />.
-          </footer>
+          <Footer />
         </ParallaxLayer>
       </Parallax>
     </div>

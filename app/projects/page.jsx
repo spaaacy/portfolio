@@ -7,6 +7,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { FaGithub, FaGlobe } from "react-icons/fa";
 import { Kanit } from "next/font/google";
+import Footer from "@/components/Footer";
 const kanit = Kanit({ subsets: ["latin"], weight: "600" });
 
 const page = () => {
@@ -59,6 +60,7 @@ const page = () => {
         </div>
         {showModal && <ProjectModal project={project} setShowModal={setShowModal} />}
       </main>
+      <Footer />
     </div>
   );
 };

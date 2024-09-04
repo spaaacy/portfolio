@@ -5,7 +5,7 @@ import Link from "next/link";
 const NavBar = () => {
   return (
     <nav className={`sticky top-4 flex z-20 px-4`}>
-      <div className="flex gap-2 sm:gap-6 items-center justify-center py-2 rounded-full bg-neutral-900 mx-auto px-8 backdrop-blur-sm bg-opacity-80 flex-wrap">
+      <div className="flex gap-2 sm:gap-6 items-center justify-center py-2 rounded-full bg-neutral-900 mx-auto px-8 backdrop-blur-sm bg-opacity-60 flex-wrap">
         <Link href="/" className="hover:text-white text-neutral-300 transition backdrop-filter max-sm:text-sm mx-2">
           Home
         </Link>
@@ -24,7 +24,7 @@ const NavBar = () => {
           href="https://www.goodreads.com/review/list/161322226?sort=rating"
           className="hover:text-white text-neutral-200 transition max-sm:text-sm  mx-2"
         >
-          Reading List
+          Book List
         </Link>
       </div>
     </nav>

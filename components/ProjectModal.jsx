@@ -15,7 +15,7 @@ const ProjectModal = ({ project, setShowModal }) => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex flex-col p-6 rounded-xl  lg:w-1/2 h-[42rem] max-h-[48rem] overflow-y-auto bg-neutral-100 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
+        className="flex flex-col p-6 rounded-xl w-full lg:w-1/2 h-[42rem] max-h-[48rem] overflow-y-auto bg-neutral-100 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
       >
         <div className="flex justify-start items-center text-xl gap-4">
           {project.logo && <Image src={project.logo} width={40} height={40} className="w-10 h-10 rounded-full" />}
@@ -53,13 +53,13 @@ const ProjectModal = ({ project, setShowModal }) => {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin"
               allowfullscreen
-              className="min-h-[28rem] w-full mt-4"
+              className="lg:min-h-[28rem] w-full mt-4"
             ></iframe>
           </div>
         )}
         {project.images && (
           <div className="mt-4">
-            <h3 className="font-semibold text-xl">Images</h3>
+            <h3 className="font-semibold text-xl mb-2">Images</h3>
             <div className="flex justify-between items-center flex-1">
               {project.images.length > 1 && (
                 <button
@@ -70,7 +70,7 @@ const ProjectModal = ({ project, setShowModal }) => {
                   <FaArrowCircleLeft />
                 </button>
               )}
-              <div className="flex items-center justify-between w-full relative min-h-[28rem] h-full">
+              <div className="flex items-center justify-between w-full relative max-lg:min-h-[14rem] lg:min-h-[24rem] h-full">
                 <Image
                   src={project.images[currentImage]}
                   fill={true}
@@ -91,7 +91,8 @@ const ProjectModal = ({ project, setShowModal }) => {
           </div>
         )}
 
-        <ul className="pt-2 mt-auto flex gap-2 justify-start items-center">
+        <h3 className="font-semibold text-xl mt-auto pt-2">Technologies</h3>
+        <ul className="flex gap-2 justify-start items-center flex-wrap">
           {project.stack.map((s, i) => {
             return (
               <p key={i} className="py-1 px-2 rounded-full bg-neutral-800 text-white text-xs">
