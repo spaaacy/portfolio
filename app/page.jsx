@@ -19,7 +19,8 @@ import Footer from "@/components/Footer";
 export default function Home() {
   const parallaxRef = useRef();
 
-  const [windowWidth, setWindowWidth] = useState(typeof window !== undefined ?? window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== undefined ? window.innerWidth : null);
+  console.log(windowWidth);
 
   return (
     <div className="flex flex-col min-h-screen">
