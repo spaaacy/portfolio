@@ -18,12 +18,15 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   const parallaxRef = useRef();
+
+  const [windowWidth, setWindowWidth] = useState(typeof window !== undefined ?? window.innerWidth);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Sidebar parallaxRef={parallaxRef} />
       <NavBar />
 
-      <Parallax pages={window.innerWidth < 640 ? 3.8 : 2.8} ref={parallaxRef}>
+      <Parallax pages={windowWidth < 640 ? 3.8 : 2.8} ref={parallaxRef}>
         <ParallaxLayer offset={0} factor={1} speed={0.7}>
           <div>
             <Image fill={true} src={"/stars.jpg"} className="-z-50" />
@@ -65,7 +68,7 @@ export default function Home() {
           </motion.div>
         </ParallaxLayer>
 
-        <ParallaxLayer offset={1} factor={window.innerWidth < 640 ? 1 : 0.5} speed={0.2}>
+        <ParallaxLayer offset={1} factor={windowWidth < 640 ? 1 : 0.5} speed={0.2}>
           <motion.div
             initial={{ opacity: 0 }}
             transition={{ ease: "easeOut", duration: 1 }}
@@ -85,7 +88,7 @@ export default function Home() {
             </div>
           </motion.div>
         </ParallaxLayer>
-        <ParallaxLayer offset={1} factor={window.innerWidth < 640 ? 1 : 0.5} speed={0.1}>
+        <ParallaxLayer offset={1} factor={windowWidth < 640 ? 1 : 0.5} speed={0.1}>
           <motion.div
             initial={{ opacity: 0 }}
             transition={{ ease: "easeOut", duration: 1 }}
@@ -122,8 +125,8 @@ export default function Home() {
         </ParallaxLayer>
 
         <ParallaxLayer
-          offset={window.innerWidth < 640 ? 2 : 1.8}
-          factor={window.innerWidth < 640 ? 1.4 : 0.6}
+          offset={windowWidth < 640 ? 2 : 1.8}
+          factor={windowWidth < 640 ? 1.4 : 0.6}
           speed={0.1}
           className=" flex justify-center items-center "
         >
@@ -193,7 +196,7 @@ export default function Home() {
         </ParallaxLayer>
 
         <ParallaxLayer
-          offset={window.innerWidth < 640 ? 3.4 : 2.4}
+          offset={windowWidth < 640 ? 3.4 : 2.4}
           factor={0.3}
           speed={0.2}
           className="flex flex-col justify-center items-center w-full"
@@ -229,7 +232,7 @@ export default function Home() {
         </ParallaxLayer>
 
         <ParallaxLayer
-          offset={window.innerWidth < 640 ? 3.7 : 2.7}
+          offset={windowWidth < 640 ? 3.7 : 2.7}
           factor={0.1}
           className="flex flex-col justify-end items-center w-full"
         >
