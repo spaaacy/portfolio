@@ -15,12 +15,11 @@ import Sidebar from "@/components/Sidebar";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaPhone } from "react-icons/fa6";
 import Footer from "@/components/Footer";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
 export default function Home() {
   const parallaxRef = useRef();
-
-  const [windowWidth, setWindowWidth] = useState(typeof window !== undefined ? window.innerWidth : null);
-  console.log(windowWidth);
+  const windowWidth = useWindowSize();
 
   return (
     <div className="flex flex-col min-h-screen">
