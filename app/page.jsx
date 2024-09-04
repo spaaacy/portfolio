@@ -5,7 +5,7 @@ import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 import { Noto_Serif, Roboto_Mono } from "next/font/google";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 const noto = Noto_Serif({ subsets: ["latin"], weight: "variable" });
 const roboto = Roboto_Mono({ subsets: ["latin"], weight: "variable" });
 import { FaGithub, FaGraduationCap, FaTools, FaUser } from "react-icons/fa";
@@ -17,18 +17,16 @@ import { FaPhone } from "react-icons/fa6";
 
 export default function Home() {
   const parallaxRef = useRef();
-
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBar />
       <Sidebar parallaxRef={parallaxRef} />
-      <Parallax pages={3.6} ref={parallaxRef}>
-        <ParallaxLayer offset={0}>
-          <div>
-            <Image fill={true} src={"/squares.png"} />
-          </div>
+      <NavBar />
+
+      <Parallax pages={window.innerWidth < 640 ? 3.6 : 2.8} ref={parallaxRef}>
+        <ParallaxLayer offset={0} factor={1} speed={0.7}>
+          <div>{/* <Image fill={true} src={"/squares.png"} /> */}</div>
         </ParallaxLayer>
-        <ParallaxLayer offset={0}>
+        <ParallaxLayer offset={0} factor={1} speed={0.2}>
           <motion.div
             initial={{ opacity: 0 }}
             transition={{ ease: "easeOut", duration: 1 }}
@@ -36,146 +34,15 @@ export default function Home() {
             viewport={{ once: true }}
             className={`drop-shadow-xl ${noto.className} fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col items-center`}
           >
-            <h1 className="text-7xl font-bold text-center">
+            <h1 className="text-6xl font-bold text-center">
               Hello,
               <br />
               I'm Aakif Mohamed
             </h1>
-            <h2 className="text-2xl">I build websites</h2>
-          </motion.div>
-        </ParallaxLayer>
-        <ParallaxLayer offset={1} factor={0.8}>
-          <div className="fixed top-1/2 -translate-y-1/2 left-[25%] flex flex-col justify-center items-center">
-            <div className="w-52 h-52 relative drop-shadow-xl">
-              <Image
-                src={"/headshot.jpg"}
-                width={208}
-                height={208}
-                style={{ objectFit: "cover" }}
-                className="w-52 h-52 rounded-full"
-              />
-            </div>
-          </div>
-        </ParallaxLayer>
-
-        <ParallaxLayer offset={1} factor={0.8}>
-          <section
-            id="about"
-            className="bg-gradient-to-tr from-slate-700 to-indigo-900 drop-shadow-xl text-neutral-50 max-w-[48rem] rounded-xl p-8 fixed top-1/2 -translate-y-1/2 left-[40%]"
-          >
-            <div className="flex mt-2">
-              <div className="flex flex-col gap-4  max-h-[32rem] overflow-y-auto">
-                <h2 className="text-4xl">About</h2>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent nisi diam, interdum ut massa vel,
-                  ullamcorper interdum arcu. In sed scelerisque lacus. Vivamus ut tortor tellus. Donec iaculis ac metus
-                  non viverra. Sed condimentum arcu nulla, eget pretium nisi aliquam id. Suspendisse purus lorem,
-                  ultrices vel pretium non, facilisis sed leo. Phasellus facilisis commodo imperdiet. Integer
-                  condimentum mi ac elit cursus, eget sollicitudin sem bibendum. Maecenas id vestibulum elit. Curabitur
-                  at convallis ante. Etiam tincidunt nisl at posuere euismod. Morbi eget mollis diam. Suspendisse
-                  rhoncus lacinia tortor. Duis interdum, leo id porttitor accumsan, orci tortor aliquam urna, in
-                  pharetra urna ipsum nec est. Cras felis nunc, malesuada quis ipsum non, posuere vehicula tellus. Cras
-                  congue dictum ornare. Morbi vitae tincidunt neque. Vestibulum nunc dolor, faucibus vel facilisis ac,
-                  laoreet vitae nulla. Phasellus convallis, risus sit amet fermentum elementum, turpis nibh vehicula
-                  risus, eget posuere leo dolor eget neque. Praesent egestas scelerisque diam, vel vehicula ante
-                  faucibus et. Praesent ultricies vel diam sit amet aliquet. Mauris pellentesque turpis et erat semper,
-                  quis molestie felis tristique. Curabitur iaculis diam quis neque volutpat viverra. In eget velit vitae
-                  quam venenatis dapibus. Mauris in neque fermentum metus commodo euismod vel eget arcu. Praesent
-                  aliquet erat nulla, ac imperdiet arcu pharetra vitae.
-                </p>
-              </div>
-            </div>
-          </section>
-        </ParallaxLayer>
-        <ParallaxLayer offset={1.8} factor={0.6} className="flex flex-col justify-center items-center w-full">
-          <div className="w-full max-w-[1260px] flex items-center justify-center flex-col">
-            <h3 className={`${roboto.className} text-5xl font-bold text-center py-2 px-4 bg-black text-white w-full`}>
-              EDUCATION
-            </h3>
-            <p className={`${noto.className} mt-8 text-center`}>
-              <span className="text-xl font-bold">Master of Science in Computer Science</span>
-              <br />
-              Florida International University
-              <br />
-              Miami, FL
-              <br />
-              Spring 2025
-            </p>
-            <p className={`${noto.className} mt-8 text-center`}>
-              <span className="text-xl font-bold">Bachelor of Science in Computer Science</span>
-              <br />
-              Asia Pacific University of Technology & Innovation
-              <br />
-              Kuala Lumpur, Malaysia
-              <br />
-              Class of 2022
-            </p>
-          </div>
-        </ParallaxLayer>
-        <ParallaxLayer offset={2.4} factor={0.8} className="flex justify-center items-center">
-          <div>
-            <h3 className={`${roboto.className} text-5xl font-bold text-center py-2 px-4 bg-black text-white`}>
-              SKILLS
-            </h3>
-            <h2 className={`${roboto.className} text-2xl font-semibold text-center mt-8`}>TECHNOLOGIES</h2>
-            <ul className="flex justify-center items-center gap-24 mt-8">
-              {technologies_images.map((t, i) => {
-                return (
-                  <div className="relative flex flex-col justify-center items-center hover:scale-125 transition group">
-                    <Image
-                      className="h-[100px] w-[100px] object-contain"
-                      key={i}
-                      src={`/technologies/${t}`}
-                      width={100}
-                      height={100}
-                    />
-                    <p
-                      className={`${roboto.className} mt-4 font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
-                    >
-                      {technologies_names[t]}
-                      {": "}
-                      {technologies_prof[t]}
-                    </p>
-                  </div>
-                );
-              })}
-            </ul>
-            <h2 className={`${roboto.className} text-2xl font-semibold text-center mt-8`}>LANGUAGES</h2>
-            <ul className="flex justify-center items-center gap-24 mt-8">
-              {languages_images.map((l, i) => {
-                return (
-                  <div className="relative flex flex-col justify-center items-center hover:scale-125 transition group">
-                    <Image
-                      className="h-[100px] w-[100px] object-contain"
-                      key={i}
-                      src={`/languages/${l}`}
-                      width={100}
-                      height={100}
-                    />
-                    <p
-                      className={`${roboto.className} mt-4 font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
-                    >
-                      {languages_names[l]}
-                      {": "}
-                      {languages_prof[l]}
-                    </p>
-                  </div>
-                );
-              })}
-            </ul>
-          </div>
-        </ParallaxLayer>
-        <ParallaxLayer offset={3.2} factor={0.3} className="flex flex-col justify-center items-center w-full">
-          <div className="w-full max-w-[1260px] flex items-center justify-center flex-col">
-            <h3 className={`${roboto.className} text-5xl font-bold text-center py-2 px-4 `}>Contact Me</h3>
+            <h2 className="text-xl text-neutral-700 font-light mt-4 text-center">
+              Web Developer and Software Engineer
+            </h2>
             <div className="text-2xl text-black flex gap-4 mt-4">
-              <Link
-                target="_blank"
-                href="mailto:aakifahamath@gmail.com"
-                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(199,22,16)] hover:shadow-[0_0_10px_3px_rgba(199,22,16,1)] transition"
-              >
-                <MdOutlineEmail />
-              </Link>
               <Link
                 target="_blank"
                 href="https://www.github.com/spaaacy"
@@ -190,6 +57,136 @@ export default function Home() {
               >
                 <FaLinkedinIn />
               </Link>
+            </div>
+          </motion.div>
+        </ParallaxLayer>
+
+        <ParallaxLayer offset={1} factor={0.5} speed={0.1}>
+          <div className="fixed top-1/2 sm:mr-10 md:mr-20 -translate-y-1/2 right-1/2 flex flex-col justify-center items-center">
+            <div className="max-sm:w-32 max-sm:h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 relative drop-shadow-xl">
+              <Image
+                src={"/headshot.jpg"}
+                width={208}
+                height={208}
+                style={{ objectFit: "cover" }}
+                className="max-sm:w-32 max-sm:h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-full"
+              />
+            </div>
+          </div>
+        </ParallaxLayer>
+        <ParallaxLayer offset={1} factor={0.5}>
+          <div className="flex flex-col fixed left-[50%] top-1/2 -translate-y-1/2 justify-center items-start gap-4 px-8">
+            <h3 className={`${roboto.className} text-2xl font-bold text-center py-2 px-4 text-white bg-black`}>
+              Education
+            </h3>
+            <p className="text-xs -mb-2 italic text-neutral-600">January 2024—April 2024</p>
+            <div className="px-4 py-2 border-2 border-black border-dashed rounded w-full md:flex max-md:flex-col gap-8 justify-start items-center">
+              <Image src={"/fiu.png"} width={48} height={48} className="w-12 h-12 object-contain" />
+              <div>
+                <span className="font-bold">Florida International University</span>
+                <br />
+                Miami, FL
+                <br />
+                <span className="italic">Master of Science in Computer Science</span>
+              </div>
+            </div>
+            <p className="text-xs -mb-2 italic text-neutral-600">September 2020—August 2023</p>
+            <div className="px-4 py-2 border-2 border-black border-dashed rounded w-full md:flex max-md:flex-col gap-8 justify-start items-center">
+              <Image src={"/apu.png"} width={48} height={48} className="w-12 h-12 object-contain" />
+              <div>
+                <span className="font-bold">Asia Pacific University of Technology & Innovation</span>
+                <br />
+                Kuala Lumpur, Malaysia
+                <br />
+                <span className="italic">Bachelor of Science in Computer Science</span>
+              </div>
+            </div>
+          </div>
+        </ParallaxLayer>
+
+        <ParallaxLayer
+          offset={1.8}
+          factor={window.innerWidth < 640 ? 1.4 : 0.6}
+          className=" flex justify-center items-center "
+        >
+          <div className="flex flex-col justify-center items-center">
+            <h3 className={`${roboto.className} text-2xl font-bold text-center py-2 px-4 text-white bg-black`}>
+              MY TOOLS OF TRADE
+            </h3>
+            <h2 className={`${roboto.className} text-lg font-semibold text-center mt-8`}>TECHNOLOGIES</h2>
+            <ul className="flex justify-center items-center gap-12 mt-8 flex-wrap px-8">
+              {technologies_images.map((t, i) => {
+                return (
+                  <div className="relative flex flex-col justify-center items-center hover:scale-125 transition group gap-2">
+                    <p
+                      className={`${roboto.className} font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-xs`}
+                    >
+                      {technologies_names[t]}
+                    </p>
+                    <Image
+                      className="h-[60px] w-[60px] object-contain"
+                      key={i}
+                      src={`/technologies/${t}`}
+                      width={60}
+                      height={60}
+                    />
+                    <p
+                      className={`${roboto.className} font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-xs`}
+                    >
+                      {technologies_prof[t]}
+                    </p>
+                  </div>
+                );
+              })}
+            </ul>
+            <h2 className={`${roboto.className} text-lg font-semibold text-center mt-8`}>LANGUAGES</h2>
+            <ul className="flex justify-center items-center gap-12 mt-8 flex-wrap px-8">
+              {languages_images.map((l, i) => {
+                return (
+                  <div className="relative flex flex-col justify-center items-center hover:scale-125 transition group gap-2">
+                    <p
+                      className={`${roboto.className} font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-xs`}
+                    >
+                      {languages_names[l]}
+                    </p>
+                    <Image
+                      className="h-[60] w-[60] object-contain"
+                      key={i}
+                      src={`/languages/${l}`}
+                      width={60}
+                      height={60}
+                    />
+                    <p
+                      className={`${roboto.className} font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100 text-xs`}
+                    >
+                      {languages_prof[l]}
+                    </p>
+                  </div>
+                );
+              })}
+            </ul>
+          </div>
+        </ParallaxLayer>
+
+        <ParallaxLayer
+          offset={window.innerWidth < 640 ? 3.2 : 2.4}
+          factor={0.3}
+          speed={0.2}
+          className="flex flex-col justify-center items-center w-full"
+        >
+          <div className="w-full max-w-[1260px] flex items-center justify-center flex-col">
+            <h3 className={`${roboto.className} max-md:text-3xl md:text-5xl font-bold text-center py-2 px-4 `}>
+              Contact Me
+            </h3>
+            <div className="text-2xl text-black flex gap-4 mt-4">
+              <Link
+                target="_blank"
+                href="mailto:aakifahamath@gmail.com"
+                className="p-2 rounded-full text-neutral-500 hover:text-[rgb(199,22,16)] hover:shadow-[0_0_10px_3px_rgba(199,22,16,1)] transition"
+              >
+                <MdOutlineEmail />
+              </Link>
+
               <Link
                 className="p-2 rounded-full text-neutral-500 hover:text-[rgb(8,133,27)] hover:shadow-[0_0_10px_3px_rgba(8,133,27,0.8)] transition"
                 target="_blank"
@@ -200,7 +197,12 @@ export default function Home() {
             </div>
           </div>
         </ParallaxLayer>
-        <ParallaxLayer offset={3.5} factor={0.1} className="flex flex-col justify-end items-center w-full">
+
+        <ParallaxLayer
+          offset={window.innerWidth < 640 ? 3.5 : 2.7}
+          factor={0.1}
+          className="flex flex-col justify-end items-center w-full"
+        >
           <footer className="py-4 text-sm flex items-baseline">
             {"Built using "}
             <Image className="inline ml-2" src={"/technologies/nextjs.png"} width={60} height={60} />, deployed on{" "}

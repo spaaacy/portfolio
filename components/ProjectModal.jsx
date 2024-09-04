@@ -15,7 +15,7 @@ const ProjectModal = ({ project, setShowModal }) => {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex flex-col p-6 rounded-xl lg:w-1/2 h-[42rem] max-h-[48rem] overflow-y-auto bg-neutral-100 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
+        className="flex flex-col p-6 rounded-xl  lg:w-1/2 h-[42rem] max-h-[48rem] overflow-y-auto bg-neutral-100 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
       >
         <div className="flex justify-start items-center text-xl gap-4">
           {project.logo && <Image src={project.logo} width={40} height={40} className="w-10 h-10 rounded-full" />}
@@ -61,13 +61,15 @@ const ProjectModal = ({ project, setShowModal }) => {
           <div className="mt-4">
             <h3 className="font-semibold text-xl">Images</h3>
             <div className="flex justify-between items-center flex-1">
-              <button
-                type="button"
-                onClick={() => setCurrentImage((currentImage + 1) % project.images.length)}
-                className="text-2xl text-black z-50 mx-2"
-              >
-                <FaArrowCircleLeft />
-              </button>
+              {project.images.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setCurrentImage((currentImage + 1) % project.images.length)}
+                  className="text-2xl text-black z-50 mx-2"
+                >
+                  <FaArrowCircleLeft />
+                </button>
+              )}
               <div className="flex items-center justify-between w-full relative min-h-[28rem] h-full">
                 <Image
                   src={project.images[currentImage]}
@@ -76,13 +78,15 @@ const ProjectModal = ({ project, setShowModal }) => {
                   objectFit="contain"
                 />
               </div>
-              <button
-                onClick={() => setCurrentImage((currentImage + 1) % project.images.length)}
-                type="button"
-                className="text-2xl text-black z-50 mx-2"
-              >
-                <FaArrowCircleRight />
-              </button>
+              {project.images.length > 1 && (
+                <button
+                  onClick={() => setCurrentImage((currentImage + 1) % project.images.length)}
+                  type="button"
+                  className="text-2xl text-black z-50 mx-2"
+                >
+                  <FaArrowCircleRight />
+                </button>
+              )}
             </div>
           </div>
         )}
