@@ -33,6 +33,13 @@ const NavBar = () => {
         >
           GitHub
         </Link>
+        <Link
+          target="_blank"
+          href="https://www.goodreads.com/review/list/161322226?shelf=%23ALL%23"
+          className="hover:text-white text-neutral-200 transition"
+        >
+          Reading List
+        </Link>
       </div>
     </nav>
   );
