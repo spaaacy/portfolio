@@ -19,14 +19,14 @@ const Sidebar = ({ parallaxRef }) => {
       <button
         className={`transition text-neutral-300 hover:text-white`}
         type="button"
-        onClick={() => parallaxRef.current.scrollTo(1)}
+        onClick={() => parallaxRef.current.scrollTo(0.75)}
       >
         <FaGraduationCap />
       </button>
       <button
         className={`transition text-neutral-300 hover:text-white`}
         type="button"
-        onClick={() => parallaxRef.current.scrollTo(1.8)}
+        onClick={() => parallaxRef.current.scrollTo(1.55)}
       >
         <FaTools />
       </button>
