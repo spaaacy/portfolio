@@ -18,7 +18,9 @@ const ProjectModal = ({ project, setShowModal }) => {
         className="flex flex-col p-6 rounded-xl w-full lg:w-1/2 h-[42rem] max-h-[48rem] overflow-y-auto bg-neutral-100 absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2"
       >
         <div className="flex justify-start items-center text-xl gap-4">
-          {project.logo && <Image src={project.logo} width={40} height={40} className="w-10 h-10 rounded-full" />}
+          {project.logo && (
+            <Image alt="project_logo" src={project.logo} width={40} height={40} className="w-10 h-10 rounded-full" />
+          )}
 
           <h1 className={`text-2xl font-semibold ${project.font ? project.font : ""}`}>{project.name}</h1>
           <Link
@@ -72,6 +74,7 @@ const ProjectModal = ({ project, setShowModal }) => {
               )}
               <div className="flex items-center justify-between w-full relative max-lg:min-h-[14rem] lg:min-h-[24rem] h-full">
                 <Image
+                  alt="project_image"
                   src={project.images[currentImage]}
                   fill={true}
                   className="w-96 h-96 flex-1 relative"

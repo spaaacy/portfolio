@@ -30,7 +30,9 @@ const page = () => {
               className="h-[16rem] md:h-[24rem] max-md:max-w-[28rem] w-full mx-auto relative px-8 py-4 hover:cursor-pointer transition group hover:scale-[101%] hover:shadow-[-10px_10px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-[-2px] hover:border hover:border-black"
             >
               <div className="bg-black px-4 py-1 rounded-full flex justify-start items-center gap-2 absolute bottom-4 left-4 backdrop-blur-md bg-opacity-50">
-                {p.logo && <Image src={p.logo} width={48} height={48} className="w-10 h-10 rounded-full -ml-3" />}
+                {p.logo && (
+                  <Image alt="logo" src={p.logo} width={48} height={48} className="w-10 h-10 rounded-full -ml-3" />
+                )}
                 <h2 className={` text-2xl text-white ${p.font ? p.font : ""}`}>{p.name}</h2>
                 <div className="flex gap-2 items-center text-xl">
                   <Link
@@ -53,7 +55,12 @@ const page = () => {
                   )}
                 </div>
               </div>
-              <Image src={p.banner.image} fill={true} className={`-z-50 ${p.banner.className} max-sm:object-contain`} />
+              <Image
+                alt="banner"
+                src={p.banner.image}
+                fill={true}
+                className={`-z-50 ${p.banner.className} max-sm:object-contain`}
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60 -z-40 via-black/20 group-hover:via-teal-100/5 group-hover:from-teal-100" />
             </div>
           ))}
