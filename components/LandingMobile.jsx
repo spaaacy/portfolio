@@ -24,7 +24,6 @@ const LandingMobile = () => {
     <div className="sm:hidden">
       <div className="h-[calc(100dvh)] relative">
         <Image alt="bg" fill={true} src={"/stars.jpg"} className="-z-50" />
-        <div className="bg-black bg-opacity-50  h-screen w-screen" />
 
         <motion.div
           initial={{ opacity: 0 }}
