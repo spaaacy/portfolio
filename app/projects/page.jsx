@@ -76,6 +76,17 @@ export default page;
 
 export const projects = [
   {
+    name: "TransactAI",
+    about: `
+TransactAI is your means of using bank statements to keep track of monthly subscriptions. No longer will Big Tech pocket your money without your knowledge, once again, giving power back to the consumer. Users can upload their PDF for their latest bank statements to our website, which will then use AI to analyze and detect monthly payments to subscription services you might have not been aware of.`,
+    github: "https://github.com/spaaacy/transactai",
+    logo: "/transact-ai/transactai_logo.png",
+    banner: { image: "/transact-ai/transactai_banner.jpg", className: "object-cover" },
+    video: "https://www.youtube.com/embed/rmgrLsMVDc0?si=Du_rkhKXujdgUFNX",
+    website: "https://devpost.com/software/transactai",
+    stack: ["React", "Next.js", "JavaScript", "TailwindCSS", "Bootstrap", "ChatGPT"],
+  },
+  {
     name: "EloStack v2",
     about: `EloStack is your hub to discover and venture on new projects in your journey to programming mastery. Built with learners in mind, our goal is to build a community around personal projects. Whether you're looking to dig into long-term projects or simply work on something on the side, EloStack is there to accomodate all your needs. We value real-world experience over raw time spent writing code, and want to best prepare you for working in teams. Create great projects and build a better portfolio, and escape the lonesome world of personal projects.`,
     github: "https://github.com/spaaacy/elostack",
