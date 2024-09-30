@@ -14,7 +14,7 @@ const NavBar = () => {
         </Link>
         <Link
           target="_blank"
-          href="https://drive.google.com/file/d/14t_tSE5WZP0FP38BcUQzqklO2S_Q-97X/view?usp=sharing"
+          href="https://drive.google.com/file/d/1F17ygGwM8MhqtXLtkGCH5Dt3NYuybpWM/view?usp=sharing"
           className="hover:text-white text-neutral-200 transition max-sm:text-sm  mx-2"
         >
           Resume
