@@ -4,7 +4,7 @@ import NavBar from "@/components/NavBar";
 import ProjectModal from "@/components/ProjectModal";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaGithub, FaGlobe } from "react-icons/fa";
 import { Kanit } from "next/font/google";
 import Footer from "@/components/Footer";
@@ -29,7 +29,12 @@ const page = () => {
               }}
               className="h-[16rem] md:h-[24rem] max-md:max-w-[28rem] w-full mx-auto relative px-8 py-4 hover:cursor-pointer transition group hover:scale-[101%] hover:shadow-[-10px_10px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-[-2px] hover:border hover:border-black"
             >
-              <div className="bg-black px-4 py-1 rounded-full flex justify-start items-center gap-2 absolute bottom-4 left-4 backdrop-blur-md bg-opacity-50">
+              {p.inProgress && (
+                <p className="text-white font-semibold rounded-full bg-black bg-opacity-60 backdrop-blur px-4 py-2 absolute top-4 right-4">
+                  In Progress
+                </p>
+              )}
+              <div className="bg-black px-4 py-1 rounded-full flex justify-start items-center gap-2 absolute bottom-4 left-4 backdrop-blur bg-opacity-50">
                 {p.logo && (
                   <Image alt="logo" src={p.logo} width={48} height={48} className="w-10 h-10 rounded-full -ml-3" />
                 )}
@@ -76,16 +81,27 @@ export default page;
 
 export const projects = [
   {
-    name: "TransactAI",
-    about: `
-TransactAI is your means of using bank statements to keep track of monthly subscriptions. No longer will Big Tech pocket your money without your knowledge, once again, giving power back to the consumer. Users can upload their PDF for their latest bank statements to our website, which will then use AI to analyze and detect monthly payments to subscription services you might have not been aware of.`,
-    github: "https://github.com/spaaacy/transactai",
-    logo: "/transact-ai/transactai_logo.png",
-    banner: { image: "/transact-ai/transactai_banner.jpg", className: "object-cover" },
-    video: "https://www.youtube.com/embed/rmgrLsMVDc0?si=Du_rkhKXujdgUFNX",
-    website: "https://devpost.com/software/transactai",
-    stack: ["React", "Next.js", "JavaScript", "TailwindCSS", "Bootstrap", "ChatGPT"],
+    name: "NutriPal",
+    inProgress: true,
+    about: `Led a 4-person team, as part of INIT Build's Web Dev Advanced, in building a online nutrition tracker to help users achieve their fitness goals, with added social features to help share progress.`,
+    github: "https://github.com/spaaacy/nutripal",
+    banner: { image: "/nutripal/nutripal_banner.png", className: "object-contain" },
+    images: ["/nutripal/nutripal_banner.jpg"],
+    website: "https://www.nutripal.pro",
+    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Vercel", "Supabase", "PostgreSQL"],
   },
+  {
+    name: "MedXpress",
+    inProgress: true,
+    about: `Led a 4-person team in building an online platform for purchasing pharmaceuticals as part of an Advanced Software Engineering graduate course.`,
+    github: "https://github.com/spaaacy/medxpress",
+    banner: { image: "/medxpress/medxpress_banner.png", className: "object-contain object-top bg-white" },
+    images: ["/medxpress/medxpress_banner.png"],
+    logo: "/medxpress/medxpress_logo.png",
+    website: "https://www.medxpress.store",
+    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Vercel", "Supabase", "PostgreSQL"],
+  },
+
   {
     name: "EloStack v2",
     about: `EloStack is your hub to discover and venture on new projects in your journey to programming mastery. Built with learners in mind, our goal is to build a community around personal projects. Whether you're looking to dig into long-term projects or simply work on something on the side, EloStack is there to accomodate all your needs. We value real-world experience over raw time spent writing code, and want to best prepare you for working in teams. Create great projects and build a better portfolio, and escape the lonesome world of personal projects.`,
@@ -96,7 +112,7 @@ TransactAI is your means of using bank statements to keep track of monthly subsc
     video: "https://www.youtube.com/embed/-4HMsHo6LLY?si=Uh68nqTu7TdZkuBI",
     website: "https://www.elostack.com",
     stack: [
-      "React",
+      "React.js",
       "Next.js",
       "JavaScript",
       "Node.js",
@@ -113,13 +129,13 @@ TransactAI is your means of using bank statements to keep track of monthly subsc
     name: "EloStack v1",
     about: `EloStack started out with a completely different concept, aiming to tackle redundancy in the technical screening process of candidates for a job opening. However, it later morphed into an email campaign tool for job seekers to reach recruiters. The content below showcases the latter idea.`,
     github: "https://github.com/spaaacy/elostack-old",
-    banner: { image: "/elostack/elostack_old_2.png", className: "object-cover bg-[#0F0F1C]" },
+    banner: { image: "/elostack/elostack_old_2.png", className: "object-cover object-top bg-[#0F0F1C]" },
     logo: "/elostack/elostack_logo_old.jpg",
     font: kanit.className,
     video: "https://www.youtube.com/embed/cotuNW5tZTY?si=qWmKg38uheIB3ts4",
     images: ["/elostack/elostack_old_1.png", "/elostack/elostack_old_2.png", "/elostack/elostack_old_3.png"],
     stack: [
-      "React",
+      "React.js",
       "Next.js",
       "JavaScript",
       "Node.js",
@@ -131,6 +147,17 @@ TransactAI is your means of using bank statements to keep track of monthly subsc
       "Vercel",
       "CRON",
     ],
+  },
+  {
+    name: "TransactAI",
+    about: `
+TransactAI is your means of using bank statements to keep track of monthly subscriptions. No longer will Big Tech pocket your money without your knowledge, once again, giving power back to the consumer. Users can upload their PDF for their latest bank statements to our website, which will then use AI to analyze and detect monthly payments to subscription services you might have not been aware of.`,
+    github: "https://github.com/spaaacy/transactai",
+    logo: "/transact-ai/transactai_logo.png",
+    banner: { image: "/transact-ai/transactai_banner.jpg", className: "object-cover" },
+    video: "https://www.youtube.com/embed/rmgrLsMVDc0?si=Du_rkhKXujdgUFNX",
+    website: "https://amipayingfornetflix.com",
+    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Bootstrap", "ChatGPT", "Vercel"],
   },
   {
     name: "APLanes",
@@ -153,7 +180,7 @@ TransactAI is your means of using bank statements to keep track of monthly subsc
     github: "https://github.com/kennethcxv/hackinmiami.git",
     website: "https://devpost.com/software/medic-cost",
     banner: { image: "/medicost/hackinmiami.jpg", className: "object-contain sm:object-bottom bg-[#FCBEFF]" },
-    stack: ["React", "Next.js", "JavaScript", "TailwindCSS", "Google Gemini", "Google Cloud", "Vercel"],
+    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Google Gemini", "Google Cloud", "Vercel"],
     video: "https://www.youtube.com/embed/4GSu6jT4AB4?si=-pvFWREYto4zYwbP",
   },
   {
@@ -192,6 +219,6 @@ TransactAI is your means of using bank statements to keep track of monthly subsc
     github: "https://github.com/spaaacy/speedburn",
     banner: { image: "/speedburn/speedburn_banner.png", className: "object-left object-cover bg-neutral-900" },
     images: ["/speedburn/speedburn_banner.png"],
-    stack: ["React", "Next.js", "JavaScript", "TailwindCSS", "Ethereum", "Solidity"],
+    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Ethereum", "Solidity"],
   },
 ];
