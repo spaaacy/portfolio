@@ -152,7 +152,7 @@ export const projects = [
     name: "TransactAI",
     about: `
 TransactAI is your means of using bank statements to keep track of monthly subscriptions. No longer will Big Tech pocket your money without your knowledge, once again, giving power back to the consumer. Users can upload their PDF for their latest bank statements to our website, which will then use AI to analyze and detect monthly payments to subscription services you might have not been aware of.`,
-    github: "https://github.com/spaaacy/transactai",
+    github: "https://github.com/spaaacy/transact-ai",
     logo: "/transact-ai/transactai_logo.png",
     banner: { image: "/transact-ai/transactai_banner.jpg", className: "object-cover" },
     video: "https://www.youtube.com/embed/rmgrLsMVDc0?si=Du_rkhKXujdgUFNX",
