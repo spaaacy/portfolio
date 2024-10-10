@@ -117,6 +117,7 @@ export const projects = [
       "JavaScript",
       "Node.js",
       "TailwindCSS",
+      "SendGrid",
       "PostgreSQL",
       "Supabase",
       "Stripe",
