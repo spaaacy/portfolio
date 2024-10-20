@@ -81,16 +81,6 @@ export default page;
 
 export const projects = [
   {
-    name: "NutriPal",
-    inProgress: true,
-    about: `Led a 4-person team, as part of INIT Build's Web Dev Advanced, in building a online nutrition tracker to help users achieve their fitness goals, with added social features to help share progress.`,
-    github: "https://github.com/spaaacy/nutripal",
-    banner: { image: "/nutripal/nutripal_banner.png", className: "object-contain" },
-    images: ["/nutripal/nutripal_banner.jpg"],
-    website: "https://www.nutripal.pro",
-    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Vercel", "Supabase", "PostgreSQL"],
-  },
-  {
     name: "MedXpress",
     inProgress: true,
     about: `Led a 4-person team in building an online platform for purchasing pharmaceuticals as part of an Advanced Software Engineering graduate course.`,
