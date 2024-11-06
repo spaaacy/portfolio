@@ -81,18 +81,6 @@ export default page;
 
 export const projects = [
   {
-    name: "MedXpress",
-    inProgress: true,
-    about: `Led a 4-person team in building an online platform for purchasing pharmaceuticals as part of an Advanced Software Engineering graduate course.`,
-    github: "https://github.com/spaaacy/medxpress",
-    banner: { image: "/medxpress/medxpress_banner.png", className: "object-contain object-top bg-white" },
-    images: ["/medxpress/medxpress_banner.png"],
-    logo: "/medxpress/medxpress_logo.png",
-    website: "https://www.medxpress.store",
-    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Vercel", "Supabase", "PostgreSQL"],
-  },
-
-  {
     name: "EloStack v2",
     about: `EloStack is your hub to discover and venture on new projects in your journey to programming mastery. Built with learners in mind, our goal is to build a community around personal projects. Whether you're looking to dig into long-term projects or simply work on something on the side, EloStack is there to accomodate all your needs. We value real-world experience over raw time spent writing code, and want to best prepare you for working in teams. Create great projects and build a better portfolio, and escape the lonesome world of personal projects.`,
     github: "https://github.com/spaaacy/elostack",
@@ -137,6 +125,17 @@ export const projects = [
       "Vercel",
       "CRON",
     ],
+  },
+    {
+    name: "MedXpress",
+    inProgress: true,
+    about: `Led a 4-person team in building an online platform for purchasing pharmaceuticals as part of an Advanced Software Engineering graduate course.`,
+    github: "https://github.com/spaaacy/medxpress",
+    banner: { image: "/medxpress/medxpress_banner.png", className: "object-contain object-top bg-white" },
+    images: ["/medxpress/medxpress_banner.png"],
+    logo: "/medxpress/medxpress_logo.png",
+    website: "https://www.medxpress.store",
+    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Vercel", "Supabase", "PostgreSQL"],
   },
   {
     name: "TransactAI",
