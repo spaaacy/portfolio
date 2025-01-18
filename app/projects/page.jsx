@@ -24,8 +24,12 @@ const page = () => {
             <div
               key={i}
               onClick={() => {
-                setProject(p);
-                setShowModal(true);
+                if (p.redirect) {
+                  window.open(p.website, "_blank");
+                } else {
+                  setProject(p);
+                  setShowModal(true);
+                }
               }}
               className="h-[16rem] md:h-[24rem] max-md:max-w-[28rem] w-full mx-auto relative px-8 py-4 hover:cursor-pointer transition group hover:scale-[101%] hover:shadow-[-10px_10px_0px_rgba(0,0,0,1)] hover:translate-x-2 hover:translate-y-[-2px] hover:border hover:border-black"
             >
@@ -40,14 +44,16 @@ const page = () => {
                 )}
                 <h2 className={` text-2xl text-white ${p.font ? p.font : ""}`}>{p.name}</h2>
                 <div className="flex gap-2 items-center text-xl">
-                  <Link
-                    onClick={(e) => e.stopPropagation()}
-                    target="_blank"
-                    href={p.github}
-                    className="text-neutral-400 hover:text-white"
-                  >
-                    <FaGithub />
-                  </Link>
+                  {p.github && (
+                    <Link
+                      onClick={(e) => e.stopPropagation()}
+                      target="_blank"
+                      href={p.github}
+                      className="text-neutral-400 hover:text-white"
+                    >
+                      <FaGithub />
+                    </Link>
+                  )}
                   {p.website && (
                     <Link
                       onClick={(e) => e.stopPropagation()}
@@ -81,27 +87,13 @@ export default page;
 
 export const projects = [
   {
-    name: "NutriPal",
-    inProgress: true,
-    about: `Led a 4-person team, as part of INIT Build's Web Dev Advanced, in building a online nutrition tracker to help users achieve their fitness goals, with added social features to help share progress.`,
-    github: "https://github.com/spaaacy/nutripal",
-    banner: { image: "/nutripal/nutripal_banner.png", className: "object-contain" },
-    images: ["/nutripal/nutripal_banner.jpg"],
-    website: "https://www.nutripal.pro",
-    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Vercel", "Supabase", "PostgreSQL"],
+    name: "TryRewind",
+    about: `EloStack is your hub to discover and venture on new projects in your journey to programming mastery. Built with learners in mind, our goal is to build a community around personal projects. Whether you're looking to dig into long-term projects or simply work on something on the side, EloStack is there to accomodate all your needs. We value real-world experience over raw time spent writing code, and want to best prepare you for working in teams. Create great projects and build a better portfolio, and escape the lonesome world of personal projects.`,
+    banner: { image: "/rewind/rewind_banner.png", className: "object-cover bg-[#170048]" },
+    logo: "/rewind/rewind_logo.png",
+    website: "https://www.tryrewind.co",
+    redirect: true,
   },
-  {
-    name: "MedXpress",
-    inProgress: true,
-    about: `Led a 4-person team in building an online platform for purchasing pharmaceuticals as part of an Advanced Software Engineering graduate course.`,
-    github: "https://github.com/spaaacy/medxpress",
-    banner: { image: "/medxpress/medxpress_banner.png", className: "object-contain object-top bg-white" },
-    images: ["/medxpress/medxpress_banner.png"],
-    logo: "/medxpress/medxpress_logo.png",
-    website: "https://www.medxpress.store",
-    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Vercel", "Supabase", "PostgreSQL"],
-  },
-
   {
     name: "EloStack v2",
     about: `EloStack is your hub to discover and venture on new projects in your journey to programming mastery. Built with learners in mind, our goal is to build a community around personal projects. Whether you're looking to dig into long-term projects or simply work on something on the side, EloStack is there to accomodate all your needs. We value real-world experience over raw time spent writing code, and want to best prepare you for working in teams. Create great projects and build a better portfolio, and escape the lonesome world of personal projects.`,
@@ -148,6 +140,17 @@ export const projects = [
       "Vercel",
       "CRON",
     ],
+  },
+  {
+    name: "MedXpress",
+    inProgress: false,
+    about: `Led a 4-person team in building an online platform for purchasing pharmaceuticals as part of an Advanced Software Engineering graduate course.`,
+    github: "https://github.com/spaaacy/medxpress",
+    banner: { image: "/medxpress/medxpress_banner.png", className: "object-contain object-top bg-white" },
+    images: ["/medxpress/medxpress_banner.png"],
+    logo: "/medxpress/medxpress_logo.png",
+    website: "https://www.medxpress.store",
+    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Vercel", "Supabase", "PostgreSQL"],
   },
   {
     name: "TransactAI",
@@ -213,13 +216,5 @@ TransactAI is your means of using bank statements to keep track of monthly subsc
     banner: { image: "/quizmify-ai/horizon_hackathon.jpg", className: "object-contain bg-[#012E2B]" },
     images: ["/quizmify-ai/image_1.png", "/quizmify-ai/image_2.png"],
     stack: ["Streamlit", "Python", "LangChain", "ChatGPT"],
-  },
-  {
-    name: "SpeedBurn",
-    about: `An token based blockchain social media application, built around creating "exclusive" communities--similar to a country club--with communities functioning as independant DAOs. Uses the Ethereum blockchain and built using Next.js, Ethers, Solidity, and MongoDB.`,
-    github: "https://github.com/spaaacy/speedburn",
-    banner: { image: "/speedburn/speedburn_banner.png", className: "object-left object-cover bg-neutral-900" },
-    images: ["/speedburn/speedburn_banner.png"],
-    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Ethereum", "Solidity"],
   },
 ];

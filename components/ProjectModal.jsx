@@ -23,14 +23,16 @@ const ProjectModal = ({ project, setShowModal }) => {
           )}
 
           <h1 className={`text-2xl font-semibold ${project.font ? project.font : ""}`}>{project.name}</h1>
-          <Link
-            onClick={(e) => e.stopPropagation()}
-            target="_blank"
-            href={project.github}
-            className="text-neutral-800 hover:text-neutral-600 text-2xl"
-          >
-            <FaGithub />
-          </Link>
+          {project.github && (
+            <Link
+              onClick={(e) => e.stopPropagation()}
+              target="_blank"
+              href={project.github}
+              className="text-neutral-800 hover:text-neutral-600 text-2xl"
+            >
+              <FaGithub />
+            </Link>
+          )}
           {project.website && (
             <Link
               onClick={(e) => e.stopPropagation()}
