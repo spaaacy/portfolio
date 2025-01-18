@@ -143,17 +143,6 @@ export const projects = [
   },
   {
     name: "MedXpress",
-    inProgress: true,
-    about: `Led a 4-person team in building an online platform for purchasing pharmaceuticals as part of an Advanced Software Engineering graduate course.`,
-    github: "https://github.com/spaaacy/medxpress",
-    banner: { image: "/medxpress/medxpress_banner.png", className: "object-contain object-top bg-white" },
-    images: ["/medxpress/medxpress_banner.png"],
-    logo: "/medxpress/medxpress_logo.png",
-    website: "https://www.medxpress.store",
-    stack: ["React.js", "Next.js", "JavaScript", "TailwindCSS", "Vercel", "Supabase", "PostgreSQL"],
-  },
-  {
-    name: "MedXpress",
     inProgress: false,
     about: `Led a 4-person team in building an online platform for purchasing pharmaceuticals as part of an Advanced Software Engineering graduate course.`,
     github: "https://github.com/spaaacy/medxpress",
