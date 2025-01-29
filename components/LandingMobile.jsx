@@ -90,7 +90,7 @@ const LandingMobile = () => {
           <h3 className={`${roboto.className} text-2xl font-bold text-center py-2 px-4 text-white bg-black`}>
             Education
           </h3>
-          <p className="text-xs -mb-2 italic text-neutral-600">January 2024—April 2024</p>
+          <p className="text-xs -mb-2 italic text-neutral-600">January 2024—April 2025</p>
           <div className="px-4 py-2 border-2 border-black border-dashed rounded w-full md:flex max-md:flex-col gap-8 justify-start items-center">
             <Image alt="fiu" src={"/fiu.png"} width={48} height={48} className="w-12 h-12 object-contain" />
             <div>
