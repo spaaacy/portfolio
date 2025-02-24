@@ -203,7 +203,7 @@ const LandingMobile = () => {
           <Link
             className="p-2 rounded-full text-neutral-500 hover:text-[rgb(8,133,27)] hover:shadow-[0_0_10px_3px_rgba(8,133,27,0.8)] transition"
             target="_blank"
-            href="tel:7868678766"
+            href="tel:7372525111"
           >
             <FaPhone />
           </Link>
