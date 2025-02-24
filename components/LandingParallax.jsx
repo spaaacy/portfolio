@@ -25,7 +25,7 @@ const LandingParallax = ({ parallaxRef }) => {
     <Parallax enabled={true} pages={2.8} ref={parallaxRef} className="max-sm:hidden">
       <ParallaxLayer offset={0} factor={1} speed={0.7}>
         <div>
-          <Image fill={true} src={"/stars.jpg"} className="-z-50" />
+          <Image fill={true} src={"/austin.jpg"} className="-z-50 object-cover" />
           <div className="bg-black bg-opacity-50  h-screen w-screen" />
         </div>
       </ParallaxLayer>
@@ -61,6 +61,7 @@ const LandingParallax = ({ parallaxRef }) => {
               <FaLinkedinIn />
             </Link>
           </div>
+          <h3 className="text-center mt-4">Based in Austin, TX</h3>
         </motion.div>
       </ParallaxLayer>
 
@@ -79,7 +80,7 @@ const LandingParallax = ({ parallaxRef }) => {
               fill={true}
               // width={208}
               // height={208}
-              style={{ objectFit: "cover" }}
+              style={{ objectFit: "contain" }}
               className="max-sm:w-32 max-sm:h-32 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-full"
             />
           </div>

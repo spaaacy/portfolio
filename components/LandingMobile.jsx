@@ -23,7 +23,10 @@ const LandingMobile = () => {
   return (
     <div className="sm:hidden">
       <div className="h-[calc(100dvh)] relative">
-        <Image alt="bg" fill={true} src={"/stars.jpg"} className="-z-50" />
+        <div>
+          <Image alt="bg" fill={true} src={"/austin.jpg"} className="-z-50 object-cover" />
+          <div className="bg-black bg-opacity-50  h-screen w-screen" />
+        </div>
 
         <motion.div
           initial={{ opacity: 0 }}
@@ -56,10 +59,11 @@ const LandingMobile = () => {
               <FaLinkedinIn />
             </Link>
           </div>
+          <h3 className="text-center mt-4">Based in Austin, TX</h3>
         </motion.div>
       </div>
 
-      <div className="py-8">
+      <div className="py-20">
         <motion.div
           initial={{ opacity: 0 }}
           transition={{ ease: "easeOut", duration: 1 }}
