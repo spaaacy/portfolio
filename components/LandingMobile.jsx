@@ -59,7 +59,7 @@ const LandingMobile = () => {
               <FaLinkedinIn />
             </Link>
           </div>
-          <h3 className="text-center mt-4">Based in Austin, TX</h3>
+          {/* <h3 className="text-center mt-4">Based in Austin, TX</h3> */}
         </motion.div>
       </div>
 
@@ -207,7 +207,7 @@ const LandingMobile = () => {
           <Link
             className="p-2 rounded-full text-neutral-500 hover:text-[rgb(8,133,27)] hover:shadow-[0_0_10px_3px_rgba(8,133,27,0.8)] transition"
             target="_blank"
-            href="tel:7372525111"
+            href="tel:4159384716"
           >
             <FaPhone />
           </Link>
