@@ -24,7 +24,7 @@ const LandingMobile = () => {
     <div className="sm:hidden">
       <div className="h-[calc(100dvh)] relative">
         <div>
-          <Image alt="bg" fill={true} src={"/austin.jpg"} className="-z-50 object-cover" />
+          <Image alt="bg" fill={true} src={"/sf.jpg"} className="-z-50 object-cover" />
           <div className="bg-black bg-opacity-50  h-screen w-screen" />
         </div>
 
@@ -59,7 +59,7 @@ const LandingMobile = () => {
               <FaLinkedinIn />
             </Link>
           </div>
-          {/* <h3 className="text-center mt-4">Based in Austin, TX</h3> */}
+          {/* <h3 className="text-center mt-4">Based in sf, TX</h3> */}
         </motion.div>
       </div>
 
@@ -75,7 +75,7 @@ const LandingMobile = () => {
           <div className="max-sm:w-44 max-sm:h-44 sm:w-44 sm:h-44 md:w-52 md:h-52 relative drop-shadow-xl">
             <Image
               alt="headshot"
-              src={"/headshot.jpg"}
+              src={"/headshot.png"}
               width={208}
               height={208}
               style={{ objectFit: "cover" }}
@@ -89,14 +89,40 @@ const LandingMobile = () => {
           transition={{ ease: "easeOut", duration: 1 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="flex flex-col justify-center items-start gap-4 px-8 mt-8"
+          className="flex flex-col justify-center items-center gap-4 px-8 mt-8"
         >
           <h3 className={`${roboto.className} text-2xl font-bold text-center py-2 px-4 text-white bg-black`}>
+            Experience
+          </h3>
+          <div className="px-4 py-2  text-xs rounded-full  w-full flex gap-8 justify-start items-center">
+            <Image src={"/rewind/rewind_logo.png"} width={48} height={48} className="w-10 h-10 object-contain" />
+            <div>
+              <span className="font-bold">TryRewind</span>
+              <br />
+              <span className="">Founding Engineer</span>
+              <br />
+              Newark, New Jersey (Remote)
+            </div>
+          </div>
+          <p className="text-xs -mt-4 italic text-neutral-600">December 2025—Present</p>
+
+          <div className="px-4 py-2  text-xs rounded-full  w-full flex gap-8 justify-start items-center">
+            <Image src={"/elostack/elostack_logo.png"} width={48} height={48} className="w-10 h-10 object-contain" />
+            <div>
+              <span className="font-bold">EloStack</span>
+              <br />
+              <span className="">Co-Founder</span>
+              <br />
+              Miami, FL
+            </div>
+          </div>
+          <p className="text-xs -mt-4 italic text-neutral-600">February  2024—August 2024</p>
+
+          <h3 className={`${roboto.className} mt-4 text-2xl font-bold text-center py-2 px-4 text-white bg-black`}>
             Education
           </h3>
-          <p className="text-xs -mb-2 italic text-neutral-600">January 2024—April 2025</p>
-          <div className="px-4 py-2 border-2 border-black border-dashed rounded w-full md:flex max-md:flex-col gap-8 justify-start items-center">
-            <Image alt="fiu" src={"/fiu.png"} width={48} height={48} className="w-12 h-12 object-contain" />
+          <div className="px-4 py-2  text-xs rounded-full  w-full flex gap-8 justify-start items-center">
+            <Image src={"/fiu.png"} width={48} height={48} className="w-10 h-10 object-contain" />
             <div>
               <span className="font-bold">Florida International University</span>
               <br />
@@ -105,9 +131,10 @@ const LandingMobile = () => {
               <span className="italic">Master of Science in Computer Science</span>
             </div>
           </div>
-          <p className="text-xs -mb-2 italic text-neutral-600">September 2020—August 2023</p>
-          <div className="px-4 py-2 border-2 border-black border-dashed rounded w-full md:flex max-md:flex-col gap-8 justify-start items-center">
-            <Image alt="apu" src={"/apu.png"} width={48} height={48} className="w-12 h-12 object-contain" />
+          <p className="text-xs -mt-4 italic text-neutral-600">January 2024—April 2025</p>
+
+          <div className="px-4 py-2  text-xs rounded-full  w-full flex gap-8 justify-start items-center">
+            <Image src={"/apu.png"} width={48} height={48} className="w-10 h-10 object-contain" />
             <div>
               <span className="font-bold">Asia Pacific University of Technology & Innovation</span>
               <br />
@@ -116,6 +143,8 @@ const LandingMobile = () => {
               <span className="italic">Bachelor of Science in Computer Science</span>
             </div>
           </div>
+          <p className="text-xs -mt-4 italic text-neutral-600">September 2020—August 2023</p>
+
         </motion.div>
       </div>
 
