@@ -104,7 +104,7 @@ const LandingMobile = () => {
               Newark, New Jersey (Remote)
             </div>
           </div>
-          <p className="text-xs -mt-4 italic text-neutral-600">December 2025—Present</p>
+          <p className="text-xs -mt-4 italic text-neutral-600">December 2024—Present</p>
 
           <div className="px-4 py-2  text-xs rounded-full  w-full flex gap-8 justify-start items-center">
             <Image src={"/elostack/elostack_logo.png"} width={48} height={48} className="w-10 h-10 object-contain" />

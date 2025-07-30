@@ -97,7 +97,7 @@ const LandingParallax = ({ parallaxRef }) => {
           <h3 className={`${roboto.className} text-2xl font-bold text-center py-2 px-4 text-white bg-black`}>
             Experience
           </h3>
-          <p className="text-xs -mb-2 italic text-neutral-600">December 2025—Present</p>
+          <p className="text-xs -mb-2 italic text-neutral-600">December 2024—Present</p>
           <div className="px-4 py-2  text-xs rounded-full  w-full md:flex max-md:flex-col gap-8 justify-start items-center">
             <Image src={"/rewind/rewind_logo.png"} width={48} height={48} className="w-10 h-10 object-contain" />
             <div>
