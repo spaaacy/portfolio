@@ -12,6 +12,9 @@ const NavBar = () => {
         <Link href="/projects" className="hover:text-white text-neutral-200 transition max-sm:text-sm  mx-2">
           Projects
         </Link>
+        <Link href="/timesheet" className="hover:text-white text-neutral-200 transition max-sm:text-sm  mx-2">
+          Timesheet
+        </Link>
         <Link
           target="_blank"
           href="https://drive.google.com/file/d/1qz-njiGDmgjWS7y8AEGuaScvpjnKVXc2/view?usp=sharing"
