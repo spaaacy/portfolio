@@ -105,10 +105,15 @@ export default function TimesheetPage() {
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState("");
   const [historyValidationError, setHistoryValidationError] = useState("");
+  const [historyCategoryFilter, setHistoryCategoryFilter] = useState("");
+  const [historyCategories, setHistoryCategories] = useState([]);
   const [editingId, setEditingId] = useState("");
   const [draftStartedAt, setDraftStartedAt] = useState("");
   const [draftEndedAt, setDraftEndedAt] = useState("");
+  const [draftCategory, setDraftCategory] = useState("");
   const [historyMutatingId, setHistoryMutatingId] = useState("");
+
+  const [newSessionCategory, setNewSessionCategory] = useState("");
 
   const [tick, setTick] = useState(0);
   const tickTimerRef = useRef(null);
@@ -195,6 +200,7 @@ export default function TimesheetPage() {
 
       await refreshSessionsAndActive(data.user);
       await fetchHistoryPage(1, data.user, historyPageSize);
+      await fetchHistoryCategories(data.user);
       if (!isMounted) return;
       setLoading(false);
     }
@@ -216,6 +222,29 @@ export default function TimesheetPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  async function fetchHistoryCategories(currentUser = user) {
+    if (!supabase) return;
+    if (!currentUser) return;
+
+    const { data, error: categoriesError } = await supabase
+      .from("timesheet_sessions")
+      .select("category")
+      .eq("user_id", currentUser.id)
+      .not("ended_at", "is", null)
+      .not("category", "is", null)
+      .order("category", { ascending: true })
+      .limit(1000);
+
+    if (categoriesError) return;
+
+    const uniq = new Set();
+    for (const row of data || []) {
+      const v = typeof row?.category === "string" ? row.category.trim() : "";
+      if (v) uniq.add(v);
+    }
+    setHistoryCategories(Array.from(uniq).sort((a, b) => a.localeCompare(b)));
+  }
+
   async function fetchHistoryPage(nextPage, currentUser = user, pageSize = historyPageSize) {
     if (!supabase) return { ok: false, rowsLength: 0 };
     if (!currentUser) return { ok: false, rowsLength: 0 };
@@ -228,13 +257,20 @@ export default function TimesheetPage() {
     const from = (clampedPage - 1) * size;
     const to = from + size - 1;
 
-    const { data, error: historyErr, count } = await supabase
+    let query = supabase
       .from("timesheet_sessions")
-      .select("id, user_id, started_at, ended_at", { count: "exact" })
+      .select("id, user_id, started_at, ended_at, category", { count: "exact" })
       .eq("user_id", currentUser.id)
       .not("ended_at", "is", null)
-      .order("started_at", { ascending: false })
-      .range(from, to);
+      .order("started_at", { ascending: false });
+
+    if (historyCategoryFilter === "__uncat__") {
+      query = query.is("category", null);
+    } else if (historyCategoryFilter) {
+      query = query.eq("category", historyCategoryFilter);
+    }
+
+    const { data, error: historyErr, count } = await query.range(from, to);
 
     if (historyErr) {
       setHistoryError(historyErr.message);
@@ -274,7 +310,7 @@ export default function TimesheetPage() {
     if (storedId) {
       const { data: byId, error: byIdError } = await supabase
         .from("timesheet_sessions")
-        .select("id, user_id, started_at, ended_at")
+        .select("id, user_id, started_at, ended_at, category")
         .eq("id", storedId)
         .maybeSingle();
 
@@ -293,7 +329,7 @@ export default function TimesheetPage() {
     if (!nextActive) {
       const { data: open, error: openError } = await supabase
         .from("timesheet_sessions")
-        .select("id, user_id, started_at, ended_at")
+        .select("id, user_id, started_at, ended_at, category")
         .eq("user_id", currentUser.id)
         .is("ended_at", null)
         .order("started_at", { ascending: false })
@@ -315,7 +351,7 @@ export default function TimesheetPage() {
 
     const { data: recent, error: recentError } = await supabase
       .from("timesheet_sessions")
-      .select("id, user_id, started_at, ended_at")
+      .select("id, user_id, started_at, ended_at, category")
       .eq("user_id", currentUser.id)
       .gte("started_at", earliest.toISOString())
       .lt("started_at", monthEnd.toISOString())
@@ -347,7 +383,7 @@ export default function TimesheetPage() {
       // Avoid multiple overlapping sessions: reuse an existing open row if it exists.
       const { data: open, error: openError } = await supabase
         .from("timesheet_sessions")
-        .select("id, user_id, started_at, ended_at")
+        .select("id, user_id, started_at, ended_at, category")
         .eq("user_id", user.id)
         .is("ended_at", null)
         .order("started_at", { ascending: false })
@@ -356,7 +392,13 @@ export default function TimesheetPage() {
       if (openError) throw openError;
 
       if (open?.[0]) {
-        setActiveSession(open[0]);
+        // If user entered a category and the open session doesn't have one, apply it.
+        const normalizedCategory = newSessionCategory.trim() || null;
+        if (normalizedCategory && !open[0].category) {
+          await supabase.from("timesheet_sessions").update({ category: normalizedCategory }).eq("id", open[0].id);
+        }
+        setNewSessionCategory("");
+        setActiveSession({ ...open[0], category: normalizedCategory || open[0].category || null });
         try {
           window.localStorage.setItem(ACTIVE_SESSION_STORAGE_KEY, open[0].id);
         } catch {
@@ -366,19 +408,22 @@ export default function TimesheetPage() {
         return;
       }
 
+      const normalizedCategory = newSessionCategory.trim() || null;
       const { data: inserted, error: insertError } = await supabase
         .from("timesheet_sessions")
         .insert({
           user_id: user.id,
           started_at: new Date().toISOString(),
           ended_at: null,
+          category: normalizedCategory,
         })
-        .select("id, user_id, started_at, ended_at")
+        .select("id, user_id, started_at, ended_at, category")
         .single();
 
       if (insertError) throw insertError;
 
       setActiveSession(inserted);
+      setNewSessionCategory("");
       try {
         window.localStorage.setItem(ACTIVE_SESSION_STORAGE_KEY, inserted.id);
       } catch {
@@ -406,7 +451,7 @@ export default function TimesheetPage() {
         .from("timesheet_sessions")
         .update({ ended_at: new Date().toISOString() })
         .eq("id", activeSession.id)
-        .select("id, user_id, started_at, ended_at")
+        .select("id, user_id, started_at, ended_at, category")
         .single();
 
       if (updateError) throw updateError;
@@ -422,6 +467,7 @@ export default function TimesheetPage() {
       setTick((t) => t + 1);
       await refreshSessionsAndActive(user);
       await fetchHistoryPage(1, user, historyPageSize);
+      await fetchHistoryCategories(user);
     } catch (e) {
       setError(e?.message || "Failed to stop session.");
     } finally {
@@ -484,6 +530,20 @@ export default function TimesheetPage() {
               </div>
               <p className="mt-3 text-sm text-neutral-600">{isRunning ? "Focused time (running)" : "Focused time"}</p>
 
+              <div className="mt-6 w-full max-w-md">
+                <label className="block text-left text-xs text-neutral-600">
+                  Category (optional)
+                  <input
+                    type="text"
+                    placeholder="work, personal, etc."
+                    value={newSessionCategory}
+                    onChange={(e) => setNewSessionCategory(e.target.value)}
+                    disabled={loading || mutating}
+                    className="mt-2 w-full rounded-2xl border border-black/10 bg-white/70 backdrop-blur px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-4 focus:ring-black/10 disabled:opacity-60"
+                  />
+                </label>
+              </div>
+
               <button
                 type="button"
                 onClick={isRunning ? onStop : onStart}
@@ -537,6 +597,27 @@ export default function TimesheetPage() {
 
             <div className="flex items-center gap-3">
               <label className="text-xs text-neutral-600">
+                Filter{" "}
+                <select
+                  className="ml-2 rounded-lg border border-black/10 bg-white/70 px-2 py-1 text-xs text-neutral-900"
+                  value={historyCategoryFilter}
+                  onChange={async (e) => {
+                    const next = e.target.value;
+                    setHistoryCategoryFilter(next);
+                    await fetchHistoryPage(1, user, historyPageSize);
+                  }}
+                  disabled={!user || historyLoading}
+                >
+                  <option value="">All</option>
+                  <option value="__uncat__">Uncategorized</option>
+                  {historyCategories.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="text-xs text-neutral-600">
                 Page size{" "}
                 <select
                   className="ml-2 rounded-lg border border-black/10 bg-white/70 px-2 py-1 text-xs text-neutral-900"
@@ -567,9 +648,10 @@ export default function TimesheetPage() {
           )}
 
           <div className="mt-6 overflow-x-auto">
-            <table className="min-w-[780px] w-full text-left">
+            <table className="min-w-[920px] w-full text-left">
               <thead>
                 <tr className="text-xs uppercase tracking-wide text-neutral-600">
+                  <th className="py-2 pr-4">Category</th>
                   <th className="py-2 pr-4">Date</th>
                   <th className="py-2 pr-4">Start</th>
                   <th className="py-2 pr-4">End</th>
@@ -580,14 +662,14 @@ export default function TimesheetPage() {
               <tbody className="text-sm text-neutral-900">
                 {historyLoading && (
                   <tr>
-                    <td className="py-4 text-neutral-600" colSpan={5}>
+                    <td className="py-4 text-neutral-600" colSpan={6}>
                       Loading history…
                     </td>
                   </tr>
                 )}
                 {!historyLoading && historyRows.length === 0 && (
                   <tr>
-                    <td className="py-4 text-neutral-600" colSpan={5}>
+                    <td className="py-4 text-neutral-600" colSpan={6}>
                       No completed sessions yet.
                     </td>
                   </tr>
@@ -601,6 +683,20 @@ export default function TimesheetPage() {
 
                     return (
                       <tr key={row.id} className="border-t border-black/5">
+                        <td className="py-3 pr-4 whitespace-nowrap">
+                          {isEditing ? (
+                            <input
+                              type="text"
+                              value={draftCategory}
+                              onChange={(e) => setDraftCategory(e.target.value)}
+                              placeholder="work, personal, etc."
+                              className="w-44 rounded-lg border border-black/10 bg-white/70 px-2 py-1 text-sm"
+                              disabled={historyMutatingId === row.id}
+                            />
+                          ) : (
+                            <span className="text-neutral-700">{row.category ? row.category : "Uncategorized"}</span>
+                          )}
+                        </td>
                         <td className="py-3 pr-4 whitespace-nowrap text-neutral-700">
                           {started.toLocaleDateString()}
                         </td>
@@ -643,6 +739,7 @@ export default function TimesheetPage() {
                                   setEditingId(row.id);
                                   setDraftStartedAt(toDatetimeLocalValue(row.started_at));
                                   setDraftEndedAt(toDatetimeLocalValue(row.ended_at));
+                                  setDraftCategory(row.category || "");
                                 }}
                               >
                                 Edit
@@ -670,6 +767,7 @@ export default function TimesheetPage() {
                                       return;
                                     }
 
+                                    const normalizedCategory = draftCategory.trim() || null;
                                     setHistoryMutatingId(row.id);
                                     try {
                                       const { error: updateError } = await supabase
@@ -677,6 +775,7 @@ export default function TimesheetPage() {
                                         .update({
                                           started_at: startDate.toISOString(),
                                           ended_at: endDate.toISOString(),
+                                          category: normalizedCategory,
                                         })
                                         .eq("id", row.id)
                                         .select("id")
@@ -687,8 +786,10 @@ export default function TimesheetPage() {
                                       setEditingId("");
                                       setDraftStartedAt("");
                                       setDraftEndedAt("");
+                                      setDraftCategory("");
                                       await refreshSessionsAndActive(user);
                                       await fetchHistoryPage(historyPage, user, historyPageSize);
+                                      await fetchHistoryCategories(user);
                                     } catch (e) {
                                       setHistoryError(e?.message || "Failed to update session.");
                                     } finally {
@@ -707,6 +808,7 @@ export default function TimesheetPage() {
                                     setEditingId("");
                                     setDraftStartedAt("");
                                     setDraftEndedAt("");
+                                    setDraftCategory("");
                                   }}
                                 >
                                   Cancel
@@ -738,12 +840,14 @@ export default function TimesheetPage() {
                                   setEditingId("");
                                   setDraftStartedAt("");
                                   setDraftEndedAt("");
+                                  setDraftCategory("");
 
                                   await refreshSessionsAndActive(user);
                                   const res = await fetchHistoryPage(pageBefore, user, historyPageSize);
                                   if (res.ok && res.rowsLength === 0 && pageBefore > 1) {
                                     await fetchHistoryPage(pageBefore - 1, user, historyPageSize);
                                   }
+                                  await fetchHistoryCategories(user);
                                 } catch (e) {
                                   setHistoryError(e?.message || "Failed to delete session.");
                                 } finally {
