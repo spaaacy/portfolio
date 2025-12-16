@@ -110,10 +110,12 @@ export default function TimesheetPage() {
   const [editingId, setEditingId] = useState("");
   const [draftStartedAt, setDraftStartedAt] = useState("");
   const [draftEndedAt, setDraftEndedAt] = useState("");
-  const [draftCategory, setDraftCategory] = useState("");
+  const [draftCategoryId, setDraftCategoryId] = useState("");
   const [historyMutatingId, setHistoryMutatingId] = useState("");
 
-  const [newSessionCategory, setNewSessionCategory] = useState("");
+  const [newSessionCategoryId, setNewSessionCategoryId] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [creatingCategory, setCreatingCategory] = useState(false);
 
   const [tick, setTick] = useState(0);
   const tickTimerRef = useRef(null);
@@ -129,24 +131,44 @@ export default function TimesheetPage() {
 
   const effectiveSessions = useMemo(() => {
     // If we have an active session but sessions list hasn't loaded it yet, include it.
-    if (!activeSession) return sessions;
-    const already = sessions.some((s) => s.id === activeSession.id);
-    return already ? sessions : [activeSession, ...sessions];
+    let allSessions = sessions;
+    if (activeSession) {
+      const already = sessions.some((s) => s.id === activeSession.id);
+      if (!already) {
+        allSessions = [activeSession, ...sessions];
+      }
+    }
+    return allSessions;
   }, [activeSession, sessions]);
+
+  const filteredSessions = useMemo(() => {
+    if (!historyCategoryFilter) {
+      // No filter - return all sessions
+      return effectiveSessions;
+    }
+
+    if (historyCategoryFilter === "__uncat__") {
+      // Filter for uncategorized (category_id is null)
+      return effectiveSessions.filter((s) => !s.category_id);
+    }
+
+    // Filter for specific category
+    return effectiveSessions.filter((s) => s.category_id === historyCategoryFilter);
+  }, [effectiveSessions, historyCategoryFilter]);
 
   const totals = useMemo(() => {
     const nowDate = new Date();
     const nowMs = nowDate.getTime();
 
-    const today = effectiveSessions.reduce((acc, s) => acc + durationWithin(s, dayStart, dayEnd, nowDate), 0);
-    const week = effectiveSessions.reduce((acc, s) => acc + durationWithin(s, weekStart, weekEnd, nowDate), 0);
-    const month = effectiveSessions.reduce((acc, s) => acc + durationWithin(s, monthStart, monthEnd, nowDate), 0);
+    const today = filteredSessions.reduce((acc, s) => acc + durationWithin(s, dayStart, dayEnd, nowDate), 0);
+    const week = filteredSessions.reduce((acc, s) => acc + durationWithin(s, weekStart, weekEnd, nowDate), 0);
+    const month = filteredSessions.reduce((acc, s) => acc + durationWithin(s, monthStart, monthEnd, nowDate), 0);
 
     const elapsedDays = Math.floor((dayStart.getTime() - monthStart.getTime()) / DAY_MS) + 1;
     const avgPerDay = elapsedDays > 0 ? Math.round(month / elapsedDays) : 0;
 
     return { today, week, month, avgPerDay, nowMs };
-  }, [effectiveSessions, dayEnd, dayStart, monthEnd, monthStart, weekEnd, weekStart]);
+  }, [filteredSessions, dayEnd, dayStart, monthEnd, monthStart, weekEnd, weekStart]);
 
   const elapsedActiveMs = useMemo(() => {
     if (!activeSession) return 0;
@@ -227,25 +249,43 @@ export default function TimesheetPage() {
     if (!currentUser) return;
 
     const { data, error: categoriesError } = await supabase
-      .from("timesheet_sessions")
-      .select("category")
+      .from("timesheet_categories")
+      .select("id, name")
       .eq("user_id", currentUser.id)
-      .not("ended_at", "is", null)
-      .not("category", "is", null)
-      .order("category", { ascending: true })
-      .limit(1000);
+      .order("name", { ascending: true });
 
     if (categoriesError) return;
 
-    const uniq = new Set();
-    for (const row of data || []) {
-      const v = typeof row?.category === "string" ? row.category.trim() : "";
-      if (v) uniq.add(v);
-    }
-    setHistoryCategories(Array.from(uniq).sort((a, b) => a.localeCompare(b)));
+    setHistoryCategories((data || []).map((c) => ({ id: c.id, name: c.name })));
   }
 
-  async function fetchHistoryPage(nextPage, currentUser = user, pageSize = historyPageSize) {
+  async function createCategory(name, currentUser = user) {
+    if (!supabase) return null;
+    if (!currentUser) return null;
+    const trimmed = name.trim();
+    if (!trimmed) return null;
+
+    setCreatingCategory(true);
+    try {
+      const { data, error: createError } = await supabase
+        .from("timesheet_categories")
+        .insert({ user_id: currentUser.id, name: trimmed })
+        .select("id, name")
+        .single();
+
+      if (createError) throw createError;
+
+      await fetchHistoryCategories(currentUser);
+      return data;
+    } catch (e) {
+      setError(e?.message || "Failed to create category.");
+      return null;
+    } finally {
+      setCreatingCategory(false);
+    }
+  }
+
+  async function fetchHistoryPage(nextPage, currentUser = user, pageSize = historyPageSize, categoryFilter = historyCategoryFilter) {
     if (!supabase) return { ok: false, rowsLength: 0 };
     if (!currentUser) return { ok: false, rowsLength: 0 };
     setHistoryLoading(true);
@@ -259,15 +299,15 @@ export default function TimesheetPage() {
 
     let query = supabase
       .from("timesheet_sessions")
-      .select("id, user_id, started_at, ended_at, category", { count: "exact" })
+      .select("id, user_id, started_at, ended_at, category_id, category:timesheet_categories(id, name)", { count: "exact" })
       .eq("user_id", currentUser.id)
       .not("ended_at", "is", null)
       .order("started_at", { ascending: false });
 
-    if (historyCategoryFilter === "__uncat__") {
-      query = query.is("category", null);
-    } else if (historyCategoryFilter) {
-      query = query.eq("category", historyCategoryFilter);
+    if (categoryFilter === "__uncat__") {
+      query = query.is("category_id", null);
+    } else if (categoryFilter) {
+      query = query.eq("category_id", categoryFilter);
     }
 
     const { data, error: historyErr, count } = await query.range(from, to);
@@ -288,6 +328,7 @@ export default function TimesheetPage() {
       setEditingId("");
       setDraftStartedAt("");
       setDraftEndedAt("");
+      setDraftCategoryId("");
     }
 
     setHistoryLoading(false);
@@ -310,7 +351,7 @@ export default function TimesheetPage() {
     if (storedId) {
       const { data: byId, error: byIdError } = await supabase
         .from("timesheet_sessions")
-        .select("id, user_id, started_at, ended_at, category")
+        .select("id, user_id, started_at, ended_at, category_id, category:timesheet_categories(id, name)")
         .eq("id", storedId)
         .maybeSingle();
 
@@ -329,7 +370,7 @@ export default function TimesheetPage() {
     if (!nextActive) {
       const { data: open, error: openError } = await supabase
         .from("timesheet_sessions")
-        .select("id, user_id, started_at, ended_at, category")
+        .select("id, user_id, started_at, ended_at, category_id, category:timesheet_categories(id, name)")
         .eq("user_id", currentUser.id)
         .is("ended_at", null)
         .order("started_at", { ascending: false })
@@ -351,7 +392,7 @@ export default function TimesheetPage() {
 
     const { data: recent, error: recentError } = await supabase
       .from("timesheet_sessions")
-      .select("id, user_id, started_at, ended_at, category")
+      .select("id, user_id, started_at, ended_at, category_id, category:timesheet_categories(id, name)")
       .eq("user_id", currentUser.id)
       .gte("started_at", earliest.toISOString())
       .lt("started_at", monthEnd.toISOString())
@@ -383,7 +424,7 @@ export default function TimesheetPage() {
       // Avoid multiple overlapping sessions: reuse an existing open row if it exists.
       const { data: open, error: openError } = await supabase
         .from("timesheet_sessions")
-        .select("id, user_id, started_at, ended_at, category")
+        .select("id, user_id, started_at, ended_at, category_id, category:timesheet_categories(id, name)")
         .eq("user_id", user.id)
         .is("ended_at", null)
         .order("started_at", { ascending: false })
@@ -392,13 +433,17 @@ export default function TimesheetPage() {
       if (openError) throw openError;
 
       if (open?.[0]) {
-        // If user entered a category and the open session doesn't have one, apply it.
-        const normalizedCategory = newSessionCategory.trim() || null;
-        if (normalizedCategory && !open[0].category) {
-          await supabase.from("timesheet_sessions").update({ category: normalizedCategory }).eq("id", open[0].id);
+        // If user selected a category and the open session doesn't have one, apply it.
+        if (newSessionCategoryId && !open[0].category_id) {
+          await supabase.from("timesheet_sessions").update({ category_id: newSessionCategoryId }).eq("id", open[0].id);
         }
-        setNewSessionCategory("");
-        setActiveSession({ ...open[0], category: normalizedCategory || open[0].category || null });
+        setNewSessionCategoryId("");
+        const updatedSession = { ...open[0], category_id: newSessionCategoryId || open[0].category_id || null };
+        if (newSessionCategoryId) {
+          const cat = historyCategories.find((c) => c.id === newSessionCategoryId);
+          if (cat) updatedSession.category = cat;
+        }
+        setActiveSession(updatedSession);
         try {
           window.localStorage.setItem(ACTIVE_SESSION_STORAGE_KEY, open[0].id);
         } catch {
@@ -408,22 +453,21 @@ export default function TimesheetPage() {
         return;
       }
 
-      const normalizedCategory = newSessionCategory.trim() || null;
       const { data: inserted, error: insertError } = await supabase
         .from("timesheet_sessions")
         .insert({
           user_id: user.id,
           started_at: new Date().toISOString(),
           ended_at: null,
-          category: normalizedCategory,
+          category_id: newSessionCategoryId || null,
         })
-        .select("id, user_id, started_at, ended_at, category")
+        .select("id, user_id, started_at, ended_at, category_id, category:timesheet_categories(id, name)")
         .single();
 
       if (insertError) throw insertError;
 
       setActiveSession(inserted);
-      setNewSessionCategory("");
+      setNewSessionCategoryId("");
       try {
         window.localStorage.setItem(ACTIVE_SESSION_STORAGE_KEY, inserted.id);
       } catch {
@@ -451,7 +495,7 @@ export default function TimesheetPage() {
         .from("timesheet_sessions")
         .update({ ended_at: new Date().toISOString() })
         .eq("id", activeSession.id)
-        .select("id, user_id, started_at, ended_at, category")
+        .select("id, user_id, started_at, ended_at, category_id, category:timesheet_categories(id, name)")
         .single();
 
       if (updateError) throw updateError;
@@ -533,14 +577,76 @@ export default function TimesheetPage() {
               <div className="mt-6 w-full max-w-md">
                 <label className="block text-left text-xs text-neutral-600">
                   Category (optional)
-                  <input
-                    type="text"
-                    placeholder="work, personal, etc."
-                    value={newSessionCategory}
-                    onChange={(e) => setNewSessionCategory(e.target.value)}
-                    disabled={loading || mutating}
-                    className="mt-2 w-full rounded-2xl border border-black/10 bg-white/70 backdrop-blur px-4 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-4 focus:ring-black/10 disabled:opacity-60"
-                  />
+                  <div className="mt-2 flex gap-2">
+                    <select
+                      value={isRunning ? (activeSession?.category_id || "") : newSessionCategoryId}
+                      onChange={async (e) => {
+                        const selectedCategoryId = e.target.value;
+                        if (isRunning && activeSession) {
+                          // Update active session's category in database
+                          if (!supabase || !user) return;
+                          try {
+                            const { data: updated, error: updateError } = await supabase
+                              .from("timesheet_sessions")
+                              .update({ category_id: selectedCategoryId || null })
+                              .eq("id", activeSession.id)
+                              .select("id, user_id, started_at, ended_at, category_id, category:timesheet_categories(id, name)")
+                              .single();
+
+                            if (updateError) throw updateError;
+                            setActiveSession(updated);
+                          } catch (err) {
+                            setError(err?.message || "Failed to update category.");
+                          }
+                        } else {
+                          setNewSessionCategoryId(selectedCategoryId);
+                        }
+                      }}
+                      disabled={loading || mutating}
+                      className="flex-1 rounded-2xl border border-black/10 bg-white/70 backdrop-blur px-4 py-3 text-sm text-neutral-900 focus:outline-none focus:ring-4 focus:ring-black/10 disabled:opacity-60"
+                    >
+                      <option value="">None</option>
+                      {historyCategories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const name = window.prompt("Enter category name:");
+                        if (!name) return;
+                        const created = await createCategory(name, user);
+                        if (created) {
+                          if (isRunning && activeSession) {
+                            // Update active session with new category
+                            if (!supabase || !user) return;
+                            try {
+                              const { data: updated, error: updateError } = await supabase
+                                .from("timesheet_sessions")
+                                .update({ category_id: created.id })
+                                .eq("id", activeSession.id)
+                                .select("id, user_id, started_at, ended_at, category_id, category:timesheet_categories(id, name)")
+                                .single();
+
+                              if (updateError) throw updateError;
+                              setActiveSession(updated);
+                            } catch (err) {
+                              setError(err?.message || "Failed to update category.");
+                            }
+                          } else {
+                            setNewSessionCategoryId(created.id);
+                          }
+                        }
+                      }}
+                      disabled={loading || mutating || creatingCategory}
+                      className="rounded-2xl border border-black/10 bg-white/60 backdrop-blur px-4 py-3 text-xs text-neutral-900 hover:bg-white/80 transition disabled:opacity-60"
+                      title="Create new category"
+                    >
+                      + New
+                    </button>
+                  </div>
                 </label>
               </div>
 
@@ -604,15 +710,15 @@ export default function TimesheetPage() {
                   onChange={async (e) => {
                     const next = e.target.value;
                     setHistoryCategoryFilter(next);
-                    await fetchHistoryPage(1, user, historyPageSize);
+                    await fetchHistoryPage(1, user, historyPageSize, next);
                   }}
                   disabled={!user || historyLoading}
                 >
                   <option value="">All</option>
                   <option value="__uncat__">Uncategorized</option>
-                  {historyCategories.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
+                  {historyCategories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
                     </option>
                   ))}
                 </select>
@@ -656,7 +762,7 @@ export default function TimesheetPage() {
                   <th className="py-2 pr-4">Start</th>
                   <th className="py-2 pr-4">End</th>
                   <th className="py-2 pr-4">Duration</th>
-                  <th className="py-2 pr-4">Actions</th>
+                  <th className="py-2 pr-4 text-end">Actions</th>
                 </tr>
               </thead>
               <tbody className="text-sm text-neutral-900">
@@ -675,8 +781,9 @@ export default function TimesheetPage() {
                   </tr>
                 )}
                 {!historyLoading &&
-                  historyRows.map((row) => {
+                  historyRows.map((row, rowIndex) => {
                     const isEditing = editingId === row.id;
+                    const isMostRecent = rowIndex === 0;
                     const started = new Date(row.started_at);
                     const ended = row.ended_at ? new Date(row.ended_at) : null;
                     const durationMs = ended ? Math.max(0, ended.getTime() - started.getTime()) : 0;
@@ -685,16 +792,41 @@ export default function TimesheetPage() {
                       <tr key={row.id} className="border-t border-black/5">
                         <td className="py-3 pr-4 whitespace-nowrap">
                           {isEditing ? (
-                            <input
-                              type="text"
-                              value={draftCategory}
-                              onChange={(e) => setDraftCategory(e.target.value)}
-                              placeholder="work, personal, etc."
-                              className="w-44 rounded-lg border border-black/10 bg-white/70 px-2 py-1 text-sm"
-                              disabled={historyMutatingId === row.id}
-                            />
+                            <div className="flex gap-1">
+                              <select
+                                value={draftCategoryId}
+                                onChange={(e) => setDraftCategoryId(e.target.value)}
+                                className="w-36 rounded-lg border border-black/10 bg-white/70 px-2 py-1 text-sm"
+                                disabled={historyMutatingId === row.id}
+                              >
+                                <option value="">None</option>
+                                {historyCategories.map((cat) => (
+                                  <option key={cat.id} value={cat.id}>
+                                    {cat.name}
+                                  </option>
+                                ))}
+                              </select>
+                              <button
+                                type="button"
+                                onClick={async () => {
+                                  const name = window.prompt("Enter category name:");
+                                  if (!name) return;
+                                  const created = await createCategory(name, user);
+                                  if (created) {
+                                    setDraftCategoryId(created.id);
+                                  }
+                                }}
+                                disabled={historyMutatingId === row.id || creatingCategory}
+                                className="rounded-lg border border-black/10 bg-white/60 backdrop-blur px-2 py-1 text-xs text-neutral-900 hover:bg-white/80 transition disabled:opacity-60"
+                                title="Create new category"
+                              >
+                                +
+                              </button>
+                            </div>
                           ) : (
-                            <span className="text-neutral-700">{row.category ? row.category : "Uncategorized"}</span>
+                            <span className="text-neutral-700">
+                              {row.category?.name || "Uncategorized"}
+                            </span>
                           )}
                         </td>
                         <td className="py-3 pr-4 whitespace-nowrap text-neutral-700">
@@ -728,22 +860,66 @@ export default function TimesheetPage() {
                         </td>
                         <td className="py-3 pr-4 whitespace-nowrap text-neutral-700">{formatHours(durationMs)}</td>
                         <td className="py-3 pr-4 whitespace-nowrap">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 justify-end">
                             {!isEditing ? (
-                              <button
-                                type="button"
-                                className="text-xs rounded-full border border-black/10 bg-white/60 backdrop-blur px-3 py-1 text-neutral-900 hover:bg-white/80 transition disabled:opacity-60"
-                                disabled={!user || historyLoading || historyMutatingId === row.id}
-                                onClick={() => {
-                                  setHistoryValidationError("");
-                                  setEditingId(row.id);
-                                  setDraftStartedAt(toDatetimeLocalValue(row.started_at));
-                                  setDraftEndedAt(toDatetimeLocalValue(row.ended_at));
-                                  setDraftCategory(row.category || "");
-                                }}
-                              >
-                                Edit
-                              </button>
+                              <>
+                                {isMostRecent && (
+                                  <button
+                                    type="button"
+                                    className="text-xs rounded-full border border-black/10 bg-emerald-600 px-3 py-1 text-white hover:bg-emerald-700 transition disabled:opacity-60"
+                                    disabled={!user || historyLoading || historyMutatingId === row.id || isRunning}
+                                    onClick={async () => {
+                                      if (!supabase || !user || isRunning) return;
+                                      setHistoryValidationError("");
+                                      setHistoryError("");
+                                      setMutating(true);
+                                      try {
+                                        const { data: inserted, error: insertError } = await supabase
+                                          .from("timesheet_sessions")
+                                          .insert({
+                                            user_id: user.id,
+                                            started_at: new Date().toISOString(),
+                                            ended_at: null,
+                                            category_id: row.category_id || null,
+                                          })
+                                          .select("id, user_id, started_at, ended_at, category_id, category:timesheet_categories(id, name)")
+                                          .single();
+
+                                        if (insertError) throw insertError;
+
+                                        setActiveSession(inserted);
+                                        try {
+                                          window.localStorage.setItem(ACTIVE_SESSION_STORAGE_KEY, inserted.id);
+                                        } catch {
+                                          // ignore
+                                        }
+
+                                        await refreshSessionsAndActive(user);
+                                      } catch (e) {
+                                        setError(e?.message || "Failed to continue session.");
+                                      } finally {
+                                        setMutating(false);
+                                      }
+                                    }}
+                                  >
+                                    Continue
+                                  </button>
+                                )}
+                                <button
+                                  type="button"
+                                  className="text-xs rounded-full border border-black/10 bg-white/60 backdrop-blur px-3 py-1 text-neutral-900 hover:bg-white/80 transition disabled:opacity-60"
+                                  disabled={!user || historyLoading || historyMutatingId === row.id}
+                                  onClick={() => {
+                                    setHistoryValidationError("");
+                                    setEditingId(row.id);
+                                    setDraftStartedAt(toDatetimeLocalValue(row.started_at));
+                                    setDraftEndedAt(toDatetimeLocalValue(row.ended_at));
+                                    setDraftCategoryId(row.category_id || "");
+                                  }}
+                                >
+                                  Edit
+                                </button>
+                              </>
                             ) : (
                               <>
                                 <button
@@ -767,7 +943,6 @@ export default function TimesheetPage() {
                                       return;
                                     }
 
-                                    const normalizedCategory = draftCategory.trim() || null;
                                     setHistoryMutatingId(row.id);
                                     try {
                                       const { error: updateError } = await supabase
@@ -775,7 +950,7 @@ export default function TimesheetPage() {
                                         .update({
                                           started_at: startDate.toISOString(),
                                           ended_at: endDate.toISOString(),
-                                          category: normalizedCategory,
+                                          category_id: draftCategoryId || null,
                                         })
                                         .eq("id", row.id)
                                         .select("id")
@@ -786,7 +961,7 @@ export default function TimesheetPage() {
                                       setEditingId("");
                                       setDraftStartedAt("");
                                       setDraftEndedAt("");
-                                      setDraftCategory("");
+                                      setDraftCategoryId("");
                                       await refreshSessionsAndActive(user);
                                       await fetchHistoryPage(historyPage, user, historyPageSize);
                                       await fetchHistoryCategories(user);
@@ -808,7 +983,7 @@ export default function TimesheetPage() {
                                     setEditingId("");
                                     setDraftStartedAt("");
                                     setDraftEndedAt("");
-                                    setDraftCategory("");
+                                    setDraftCategoryId("");
                                   }}
                                 >
                                   Cancel
@@ -840,7 +1015,7 @@ export default function TimesheetPage() {
                                   setEditingId("");
                                   setDraftStartedAt("");
                                   setDraftEndedAt("");
-                                  setDraftCategory("");
+                                  setDraftCategoryId("");
 
                                   await refreshSessionsAndActive(user);
                                   const res = await fetchHistoryPage(pageBefore, user, historyPageSize);
